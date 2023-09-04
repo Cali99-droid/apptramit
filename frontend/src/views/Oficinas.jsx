@@ -2,8 +2,10 @@ import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Link } from 'react-router-dom';
 
+import { useState } from 'react';
+import OfficeModal from '../components/OfficeModal';
+import '../App.css'
 const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
@@ -48,12 +50,21 @@ const columns = [
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
   ];
 
-export default function Documentos() {
+export default function Oficinas() {
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <Box display={'flex'} justifyContent={'end'} padding={2}>
-        <Button startIcon={<AddCircleIcon/>} component={Link}
-      to="/admin/nuevo">
+        <Button startIcon={<AddCircleIcon/>} onClick={handleOpenModal}>
          Nuevo
         </Button>
 
@@ -72,6 +83,7 @@ export default function Documentos() {
       checkboxSelection
       disableRowSelectionOnClick
     />
+     <OfficeModal open={modalOpen} onClose={handleCloseModal} />
   </Box>
   )
 }

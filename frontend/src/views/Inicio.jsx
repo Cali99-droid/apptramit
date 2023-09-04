@@ -9,7 +9,7 @@ export default function Inicio() {
         fontWeight={"bold"}
         textAlign={"center"}
       >
-        Bienvenido al sSistema de trámite documentario si cambio bva
+        Bienvenido al Sistema de trámite documentario
       </Typography>
       <Typography
         mt={2}

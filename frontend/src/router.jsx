@@ -7,6 +7,8 @@ import Flujo from './views/Flujo'
 import AdminLayout from './layouts/AdminLayout'
 import Documentos from './views/Documentos'
 import Usuarios from './views/Usuarios'
+import Nuevo from './views/Nuevo'
+import Oficinas from './views/Oficinas'
 // import Login from './views/Login'
 
 // import Layout from './layouts/Layout'
@@ -54,9 +56,20 @@ const router = createBrowserRouter([
             element: <Documentos/>
         },
         {
+            path:'/admin/nuevo',
+            element: <Nuevo/>
+        },
+        {
             path:'/admin/usuarios',
             element: <Usuarios/>
-        }]
+        },
+        {
+            path:'/admin/oficinas',
+            element: <Oficinas/>  
+        }
+        
+    
+    ]
     }
     ])
 

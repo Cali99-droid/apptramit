@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AppBar,  Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar,  Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 
@@ -102,7 +102,7 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            SISTRA
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -117,10 +117,10 @@ const Header = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              {/* <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            
+              {/* <Tooltip title="Open settings"><IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton> */}</Tooltip>
+              </IconButton> </Tooltip>*/}
               <Link to={'/auth/login'}>
                 <Button variant='contained'  color="secondary" endIcon={<LoginIcon/>} >
                     Acceder

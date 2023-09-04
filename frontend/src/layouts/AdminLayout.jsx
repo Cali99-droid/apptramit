@@ -16,8 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Link, Outlet } from 'react-router-dom';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
@@ -168,7 +167,7 @@ export default function AdminLayout() {
                 <ListItemText   primary={'Documentos'} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-            <ListItem  disablePadding sx={{ display: 'block' }} component={Link} to="/admin/usuarios">
+            <ListItem  disablePadding sx={{ display: 'block' }} component={Link} to="/admin/oficinas">
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -214,14 +213,14 @@ export default function AdminLayout() {
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+        <ListItem  disablePadding sx={{ display: 'block' }} component={Link} to="/">
               <ListItemButton
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
+
               >
                 <ListItemIcon
                   sx={{
@@ -230,12 +229,11 @@ export default function AdminLayout() {
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                   <LogoutIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText   primary={'Salir'} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-          ))}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
