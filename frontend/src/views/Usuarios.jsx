@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -7,6 +7,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import '../App.css'
 import { useState } from 'react';
 import UserCreationModal from '../components/UserCreationModal';
+import { grey } from '@mui/material/colors';
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
@@ -61,13 +62,16 @@ export default function Usuarios() {
     setModalOpen(false);
   };
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
-      <Box display={'flex'} justifyContent={'end'} padding={2}>
-        <Button startIcon={<AddCircleIcon/>} onClick={handleOpenModal}>
+    <>
+     <Paper elevation={1} sx={{display:'flex', justifyContent:'space-between', padding:2,marginBottom:2, bgcolor:grey[200]}}>
+     <Typography variant='h6'>Lista de Usuarios</Typography>
+    <Button startIcon={<AddCircleIcon/>} variant='contained' onClick={handleOpenModal}>
          Nuevo
         </Button>
-
-      </Box>
+    </Paper>
+    <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}}  elevation={1}>
+       <Box sx={{ height: 400, width: '100%' }} padding={4}>
+      
     <DataGrid
       rows={rows}
       columns={columns}
@@ -79,10 +83,14 @@ export default function Usuarios() {
         },
       }}
       pageSizeOptions={[5]}
-      checkboxSelection
-      disableRowSelectionOnClick
+      // checkboxSelection
+      // disableRowSelectionOnClick
     />
      <UserCreationModal open={modalOpen} onClose={handleCloseModal} />
   </Box>
+    </Paper>
+   
+    </>
+    
   )
 }

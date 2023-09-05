@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -19,13 +19,9 @@ import ListItemText from '@mui/material/ListItemText';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Link, Outlet } from 'react-router-dom';
 import PostAddIcon from '@mui/icons-material/PostAdd';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import GroupIcon from '@mui/icons-material/Group';
-import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
-
+// import AccountTreeIcon from '@mui/icons-material/AccountTree';
+// import GroupIcon from '@mui/icons-material/Group';
+import { useState } from 'react';
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -93,9 +89,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function AdminLayout() {
+export default function OficinaLayout() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -104,21 +100,12 @@ export default function AdminLayout() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const openMenu = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Box display={'flex'} justifyContent={'space-between'}>
-        <Toolbar >
+        <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -149,83 +136,7 @@ export default function AdminLayout() {
           >
             SISTRA
           </Typography>
-          
         </Toolbar>
-        <Tooltip title="Account settings">
-          <IconButton
-     
-            onClick={handleClick}
-            size="small"
-            sx={{ marginRight: 2 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-          </IconButton>
-        </Tooltip>
-        <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={openMenu}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-            mt: 1.5,
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            '&:before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Menu>
-        </Box>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
@@ -236,7 +147,7 @@ export default function AdminLayout() {
         <Divider />
         <List>
         
-            <ListItem  disablePadding sx={{ display: 'block' }} component={Link} to="/admin">
+            <ListItem  disablePadding sx={{ display: 'block' }} component={Link} to="/oficina">
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -257,48 +168,7 @@ export default function AdminLayout() {
                 <ListItemText   primary={'Documentos'} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-            <ListItem  disablePadding sx={{ display: 'block' }} component={Link} to="/admin/oficinas">
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                   <AccountTreeIcon />
-                </ListItemIcon>
-                <ListItemText   primary={'Oficinas'} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem  disablePadding sx={{ display: 'block' }} component={Link} to="/admin/usuarios">
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                   <GroupIcon />
-                </ListItemIcon>
-                <ListItemText   primary={'Usuarios'} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
+            
          
         </List>
         <Divider />

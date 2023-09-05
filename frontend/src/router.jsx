@@ -9,6 +9,7 @@ import Documentos from './views/Documentos'
 import Usuarios from './views/Usuarios'
 import Nuevo from './views/Nuevo'
 import Oficinas from './views/Oficinas'
+import OficinaLayout from './layouts/OficinaLayout'
 // import Login from './views/Login'
 
 // import Layout from './layouts/Layout'
@@ -49,6 +50,17 @@ const router = createBrowserRouter([
         
     //   
     },{
+        path:'/oficina',
+        element:<OficinaLayout />,
+        children:[{
+            index:true,
+            element: <Documentos/>
+        },{
+            path:'/oficina/nuevo',
+            element: <Nuevo/>
+        }]  
+    }
+    ,{
         path:'/admin',
         element:<AdminLayout />,
         children:[{
