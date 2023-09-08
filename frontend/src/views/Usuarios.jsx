@@ -1,29 +1,30 @@
-import { Button, Paper, Typography } from '@mui/material';
+import { Backdrop, Button, CircularProgress, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-
+import useSWR from 'swr'
 import '../App.css'
 import { useState } from 'react';
 import UserCreationModal from '../components/UserCreationModal';
 import { grey } from '@mui/material/colors';
+import clienteAxios from '../config/axios';
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
-    field: 'firstName',
+    field: 'name',
     headerName: 'First name',
     width: 150,
     editable: true,
   },
   {
-    field: 'lastName',
+    field: 'email',
     headerName: 'Last name',
     width: 150,
     editable: true,
   },
   {
-    field: 'age',
+    field: 'oficina_id',
     headerName: 'Age',
     type: 'number',
     width: 110,
@@ -53,6 +54,8 @@ const rows = [
 ];
 export default function Usuarios() {
   const [modalOpen, setModalOpen] = useState(false);
+  const fetcher = () => clienteAxios('/api/users').then(datos => datos.data)
+  const { data, error, isLoading } = useSWR('/api/productos', fetcher, {refreshInterval: 10000})
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -61,6 +64,17 @@ export default function Usuarios() {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+
+
+
+  
+  if(isLoading) return( <Backdrop
+  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+  open={true}
+
+>
+  <CircularProgress color="inherit" />
+</Backdrop>)
   return (
     <>
      <Paper elevation={1} sx={{display:'flex', justifyContent:'space-between', padding:2,marginBottom:2, bgcolor:grey[200]}}>
@@ -71,9 +85,16 @@ export default function Usuarios() {
     </Paper>
     <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}}  elevation={1}>
        <Box sx={{ height: 400, width: '100%' }} padding={4}>
-      
+       {/* <Backdrop
+  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+  open={!isLoading}
+
+>
+  <CircularProgress color="inherit" />
+</Backdrop> */}
     <DataGrid
-      rows={rows}
+    loading={isLoading}
+      rows={data.data}
       columns={columns}
       initialState={{
         pagination: {

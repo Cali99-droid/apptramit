@@ -9,6 +9,7 @@ import {
   MenuItem,
   FormHelperText,
 } from '@mui/material';
+import clienteAxios from '../config/axios';
 
 // eslint-disable-next-line react/prop-types
 const UserCreationModal = ({ open, onClose }) => {
@@ -24,14 +25,16 @@ const UserCreationModal = ({ open, onClose }) => {
   const offices = ['Oficina 1', 'Oficina 2', 'Oficina 3']; // Lista de oficinas
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+  
+    const { name, value } = e.target;  
+    console.log(e.target)
     setUserData({
       ...userData,
       [name]: value,
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     // Validar el formulario
     const newErrors = {};
     if (!userData.name) {
@@ -50,6 +53,12 @@ const UserCreationModal = ({ open, onClose }) => {
     if (Object.keys(newErrors).length === 0) {
       // Realizar acciones cuando el formulario se envíe con éxito
       console.log('Datos del usuario:', userData);
+      try {
+        const resp = await clienteAxios.post('/api/registro',userData)
+        console.log(resp)
+      } catch (error) {
+        console.log(error.response.data.errors)
+      }
       setErrors({});
       onClose();
     } else {
@@ -100,8 +109,8 @@ const UserCreationModal = ({ open, onClose }) => {
             value={userData.office}
             onChange={handleChange}
           >
-            {offices.map((office) => (
-              <MenuItem key={office} value={office}>
+            {offices.map((office,index) => (
+              <MenuItem key={index} value={index+1}>
                 {office}
               </MenuItem>
             ))}
