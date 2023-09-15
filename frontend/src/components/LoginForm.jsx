@@ -2,12 +2,40 @@
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
+import { createRef, useState } from 'react';
+
+import { useAuth } from '../hooks/useAuth';
 const LoginForm = () => {
+  const emailRef = createRef();
+  const passwordRef = createRef();
+
+  // const [errores, setErrores] = useState([])
+  // const { login } = useAuth({
+  //     middleware: 'guest',
+  //     url: '/'
+  // })
+  const [errores, setErrores] = useState([])
+  const {login} = useAuth({
+    middleware:'guest',
+    url:'/oficina'
+
+  });
+  const handleSubmit = async e => {
+      e.preventDefault();
+
+      const datos = {
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+      }
+ 
+      login(datos, setErrores)
+  }
+
   return (
     <Container maxWidth="xs" >
      
       <div className='mt-20'>
-       
+      
         <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
           <AdbIcon fontSize='large' sx={{ mr: 1 }} />
           <Link
@@ -34,12 +62,17 @@ const LoginForm = () => {
     <Typography variant="h6" align="center" gutterBottom>
           Iniciar sesión
         </Typography>
-        <form>
+        {errores ? errores.map((error, i) => <p key={i}>{error}</p>)  : null }
+        <form   onSubmit={handleSubmit}
+                    noValidate>
           <TextField
             label="Correo electrónico"
+            type='email'
             fullWidth
             margin="normal"
             variant="outlined"
+            inputRef={emailRef}
+          autoComplete='true'
           />
           <TextField
             label="Contraseña"
@@ -47,6 +80,8 @@ const LoginForm = () => {
             margin="normal"
             variant="outlined"
             type="password"
+            inputRef={passwordRef}
+            autoComplete='true'
           />
           <Button
             type="submit"

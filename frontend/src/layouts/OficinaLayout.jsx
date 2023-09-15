@@ -21,6 +21,7 @@ import { Link, Outlet } from 'react-router-dom';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 // import AccountTreeIcon from '@mui/icons-material/AccountTree';
 // import GroupIcon from '@mui/icons-material/Group';
+import { useAuth } from '../hooks/useAuth';
 import { useState } from 'react';
 const drawerWidth = 240;
 
@@ -90,6 +91,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function OficinaLayout() {
+
+  const {user, error,logout} = useAuth({middleware:'auth'});
+ 
+  console.log(error)
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -134,7 +139,10 @@ export default function OficinaLayout() {
               textDecoration: 'none',
             }}
           >
-            SISTRA
+            SISTRA 
+          </Typography>
+          <Typography>
+            {`Bienvenido ${user?.name}`}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -173,14 +181,14 @@ export default function OficinaLayout() {
         </List>
         <Divider />
         <List>
-        <ListItem  disablePadding sx={{ display: 'block' }} component={Link} to="/">
+        <ListItem  disablePadding sx={{ display: 'block' }} >
               <ListItemButton
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
-
+             onClick={logout}
               >
                 <ListItemIcon
                   sx={{
@@ -188,6 +196,7 @@ export default function OficinaLayout() {
                     mr: open ? 3 : 'auto',
                     justifyContent: 'center',
                   }}
+                  
                 >
                    <LogoutIcon />
                 </ListItemIcon>
