@@ -31,30 +31,33 @@ class AuthController extends Controller
         ];
     }
 
-    // public function login(LoginRequest $request) {
-    //     $data = $request->validated();
+    public function login(LoginRequest $request)
+    {
 
-    //     // Revisar el password
-    //     if(!Auth::attempt($data)) {
-    //         return response([
-    //             'errors' => ['El email o el password son incorrectos']
-    //         ], 422);
-    //     }
+        $data = $request->validated();
 
-    //     // Autenticar al usuario
-    //     $user = Auth::user();
-    //     return [
-    //         'token' => $user->createToken('token')->plainTextToken,
-    //         'user' => $user
-    //     ];
-    // }
+        // // Revisar el password
+        if (!Auth::attempt($data)) {
+            return response([
+                'errors' => ['El email o el password son incorrectos']
+            ], 422);
+        }
 
-    // public function logout(Request $request) {
-    //     $user = $request->user();
-    //     $user->currentAccessToken()->delete();
+        // Autenticar al usuario
+        $user = Auth::user();
+        return [
+            'token' => $user->createToken('token')->plainTextToken,
+            'user' => $user
+        ];
+    }
 
-    //     return [
-    //         'user' => null
-    //     ];
-    // }
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+
+        return [
+            'user' => null
+        ];
+    }
 }
