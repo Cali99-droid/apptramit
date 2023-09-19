@@ -7,10 +7,12 @@ import { useState } from 'react';
 import OfficeModal from '../components/OfficeModal';
 import '../App.css'
 import { cyan, grey } from '@mui/material/colors';
+import clienteAxios from '../config/axios';
+import useSWR from 'swr';
 const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'oficina',
+      field: 'nombre',
       headerName: 'Oficina',
       width: 800,
       editable: true,
@@ -30,8 +32,6 @@ const columns = [
           // onClick={() => { hadleOpenCalificacion(params.row.calificaciones) }}TaskAltIcon
         />
      
-    
-     
       ]
   
     }
@@ -39,18 +39,24 @@ const columns = [
    
   ];
   
-  const rows = [
-    { id: 1, oficina: 'Snow' },
-    { id: 2, oficina: 'Lannister' },
-    { id: 3, oficina: 'Lannister' },
-    { id: 4, oficina: 'Stark'},
+  // const rows = [
+  //   { id: 1, oficina: 'Snow' },
+  //   { id: 2, oficina: 'Lannister' },
+  //   { id: 3, oficina: 'Lannister' },
+  //   { id: 4, oficina: 'Stark'},
 
-  ];
+  // ];
 
 export default function Oficinas() {
-
+  const token = localStorage.getItem("AUTH_TOKEN");
+  const fetcher = () => clienteAxios('/api/oficina',{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then(datos => datos.data)
+  const { data,  isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
   const [modalOpen, setModalOpen] = useState(false);
-
+console.log(data.data)
   const handleOpenModal = () => {
     setModalOpen(true);
   };
@@ -75,7 +81,7 @@ export default function Oficinas() {
 
       </Box>
     <DataGrid
-      rows={rows}
+      rows={data.data}
       columns={columns}
       initialState={{
         pagination: {

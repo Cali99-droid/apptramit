@@ -48,7 +48,19 @@ const Header = () => {
           >
             SISTRA
           </Typography>
-
+         <Box display={'flex'} gap={2}>
+         <Link to={'/'}>
+                <Button variant='outlined'  color="inherit"  >
+                    Consulta
+                </Button>
+                </Link>
+                <Link to={'/solicitud'}>
+                <Button variant='outlined'  color="inherit"  >
+                    Solicitud de trámite
+                    
+                </Button>
+                </Link>
+         </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -121,13 +133,14 @@ const Header = () => {
               {/* <Tooltip title="Open settings"><IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton> </Tooltip>*/}
-              <Link to={'/auth/login'}>
+               
+            
+                <Link to={'/auth/login'}>
                 <Button variant='contained'  color="secondary" endIcon={<LoginIcon/>} >
                     Acceder
                     
                 </Button>
                 </Link>
-            
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"

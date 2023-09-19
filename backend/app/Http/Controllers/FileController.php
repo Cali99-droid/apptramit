@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\OficinaCollection;
-use App\Models\Oficina;
+use App\Models\File;
 use Illuminate\Http\Request;
 
-class OficinaController extends Controller
+class FileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +13,6 @@ class OficinaController extends Controller
     public function index()
     {
         //
-        return new OficinaCollection(Oficina::all());
     }
 
     /**
@@ -23,18 +21,12 @@ class OficinaController extends Controller
     public function store(Request $request)
     {
         //
-        $oficina = new Oficina;
-        $oficina->nombre = $request->officeName;
-        $oficina->save();
-        return [
-            'message' => 'un mensaje post'
-        ];
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Oficina $oficina)
+    public function show(File $file)
     {
         //
     }
@@ -42,7 +34,7 @@ class OficinaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Oficina $oficina)
+    public function update(Request $request, File $file)
     {
         //
     }
@@ -50,7 +42,7 @@ class OficinaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Oficina $oficina)
+    public function destroy(File $file)
     {
         //
     }

@@ -7,7 +7,7 @@ import {
   FormHelperText,
 
 } from '@mui/material';
-
+import clienteAxios from '../config/axios';
 // eslint-disable-next-line react/prop-types
 const OfficeModal = ({ open, onClose }) => {
   const [officeName, setOfficeName] = useState('');
@@ -19,12 +19,26 @@ const OfficeModal = ({ open, onClose }) => {
     onClose();
   };
 
-  const handleSubmit = () => {
-    // Validar el nombre de la oficina
+  const handleSubmit = async() => {
+    // Validar el nombre de la oficina 
+     const token = localStorage.getItem("AUTH_TOKEN");
     if (officeName.trim() === '') {
       setError('El nombre de la oficina es requerido');
     } else {
       // Realizar acciones cuando el formulario se envíe con éxito
+      try {
+        await clienteAxios.post('/api/oficina',{
+          officeName
+        },{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        
+      } catch (error) {
+        console.log(error)
+      }
+
       console.log('Nombre de la oficina:', officeName);
       handleClose();
     }

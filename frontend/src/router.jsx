@@ -10,6 +10,7 @@ import Usuarios from './views/Usuarios'
 import Nuevo from './views/Nuevo'
 import Oficinas from './views/Oficinas'
 import OficinaLayout from './layouts/OficinaLayout'
+import Registro from './views/Registro'
 // import Login from './views/Login'
 
 // import Layout from './layouts/Layout'
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
           {
             path:'/resultado',
              element: <Flujo/>
+          },
+          {
+            path:'/solicitud',
+             element: <Registro/>
           }
         ]
 
