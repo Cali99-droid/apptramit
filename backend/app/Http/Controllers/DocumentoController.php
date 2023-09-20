@@ -14,13 +14,21 @@ class DocumentoController extends Controller
     {
         //
     }
+    public function upload()
+    {
+        //
+    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'name' => 'required|string',
+            'pdfFile' => 'required|file|mimes:pdf|max:10240', // Validación del archivo PDF
+        ]);
         // $documento = new Documento();
         // $documento->tipo_persona = $request->values['personaType'];
         // $documento->dni = $request->values['dni'];
@@ -34,10 +42,11 @@ class DocumentoController extends Controller
         // $documento->estado_id = 1;
         // $pdfFile = $request->values['pdfFile'];
         // // Generar un nombre único para el archivo
-        // $uniqueName = time() . '_' . $pdfFile->getClientOriginalName();
+        $pdfFile = $request->file('pdfFile');
+        $uniqueName = time() . '_' . $pdfFile->getClientOriginalName();
 
-        // // Guardar el archivo en el directorio de almacenamiento
-        // $pdfFile->storeAs('pdfs', $uniqueName);
+        // Guardar el archivo en el directorio de almacenamiento
+        $pdfFile->storeAs('pdfs', $uniqueName);
         //guradar documento
         //guardar historial
 
@@ -45,9 +54,12 @@ class DocumentoController extends Controller
 
         // $documento->nombre_documento = $request->values['documentName'];
 
+        $name = $request->input('name');
+
         return [
             'message' => 'un mensaje post documetno',
-            'doc' =>   $request->values['pdfFile'],
+            'doc' =>   $pdfFile,
+            'name' =>  $name,
         ];
     }
 

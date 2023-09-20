@@ -56,7 +56,7 @@ export default function Oficinas() {
   }).then(datos => datos.data)
   const { data,  isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
   const [modalOpen, setModalOpen] = useState(false);
-console.log(data.data)
+
   const handleOpenModal = () => {
     setModalOpen(true);
   };

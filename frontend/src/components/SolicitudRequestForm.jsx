@@ -12,7 +12,8 @@ import {
   Grid,
   Input,
 } from '@mui/material';
-import clienteAxios from '../config/axios';
+// import clienteAxios from '../config/axios';
+import axios from 'axios';
 
 
 const validationSchema = yup.object().shape({
@@ -52,21 +53,32 @@ const validationSchema = yup.object().shape({
 const SolicitudRequestForm = () => {
  
   
-  const token = localStorage.getItem("AUTH_TOKEN");
+  // const token = localStorage.getItem("AUTH_TOKEN");
     const formik = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async(values) => {
          
-
-       
+          const formData = new FormData();
+          formData.append('asunto', values.asunto);
+          formData.append('direccion', values.direccion);
+          formData.append('telefono', values.telefono);
+          formData.append('personaType', values.personaType);
+          formData.append('name', values.name);
+          formData.append('dni', values.dni);
+          formData.append('documentName', values.documentName);
+          formData.append('folio', values.folio);
+          formData.append('documentType', values.documentType);
+          formData.append('pdfFile', values.pdfFile);
+          formData.append('otro', 'otrororo');
+       console.log(formData)
           // Realizar acciones cuando el formulario se envíe con éxito
           try {
-            await clienteAxios.post('/api/documento',{
-              values
-            },{
+            await axios.post('http://localhost/api/documento',
+              formData
+            ,{
               headers: {
-                Authorization: `Bearer ${token}`,
+                // Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
               },
             })
@@ -75,7 +87,7 @@ const SolicitudRequestForm = () => {
             console.log(error)
           }
 
-          console.log('Formulario enviado con éxito:', values);
+          // console.log('Formulario enviado con éxito:', values);
         },
       });
    
