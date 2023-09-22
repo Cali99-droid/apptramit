@@ -1,19 +1,71 @@
-import { Button, Paper, Typography } from '@mui/material';
+import { Button, Chip, Link, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Link } from 'react-router-dom';
-import { blue, cyan,  grey,  orange } from '@mui/material/colors';
+
+import { blue,  cyan,  grey,  orange } from '@mui/material/colors';
 import ReplyIcon from '@mui/icons-material/Reply';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import DoneIcon from '@mui/icons-material/Done';
+import useSWR from 'swr';
+import clienteAxios from '../config/axios';
+import * as dayjs from 'dayjs'
+import 'dayjs/locale/es' // load on demand
+import ModalTracking from '../components/modal/ModalTracking';
+import { useState } from 'react';
+dayjs.locale('es')
+const download = async(docName)=>{
+  // const token = localStorage.getItem("AUTH_TOKEN");
+  try {
+    const downloadUrl = `http://localhost/api/download/${docName}`;
+       // Abre el enlace en una nueva ventana o pestaña
+       window.open(downloadUrl, '_blank');
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+  
+
+
+export default function Documentos() {
+  const token = localStorage.getItem("AUTH_TOKEN");
+  const fetcher = () => clienteAxios('/api/documento',{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then(datos => datos.data)
+  const { data,isLoading } = useSWR('/api/documento', fetcher, {refreshInterval: 10000})
+const [open, setOpen] = useState(false);
+const handleCloseTrack = ()=>{
+  setOpen(false);
+}
+
+
+const [oficinas, setOficinas] = useState([])
+const handleOpenTracking = (oficinas )=>{
+
+setOficinas(oficinas)
+setOpen(true)
+}
+
 const columns = [
-  // { field: 'id', headerName: 'ID', width: 50 },
   {
-    field: 'codigo',
-    headerName: 'Código de Seguimiento',
+    field:'id',
+    headerName:'ID',
+    width:50
+  },
+  {
+    field: 'dir',
+    headerName: 'Documento',
     width: 200,
-    editable: true,
+    renderCell: ({ row }) => {
+        return (
+                <Link underline='always' sx={{cursor:'pointer'}} component={Link} onClick={()=>download(row.dir)}>
+                    {row.dir}
+                </Link>  
+        )
+    }
   },
   {
     field: 'dni',
@@ -22,34 +74,52 @@ const columns = [
     editable: true,
   },
   {
-    field: 'nombre',
+    field: 'nombre_interesado',
     headerName: 'Nombre',
     // type: 'number',
-    width: 200,
+    width: 250,
     editable: true,
   },
   {
-    field: 'documento',
-    headerName: 'Documento',
-    description: 'This column has a value getter and is not sortable.',
+    field: 'tipo_persona',
+    headerName: 'Tipo',
+    // type: 'number',
+    renderCell: ({row}) => {
+    // console.log(row.oficinas)
+        if (row.tipo_persona ===1) {
+          return (<Chip label={'Natural'} variant='outlined' color='info'/>);
+        }
+        if (row.tipo_persona ===2) {
+          return (<Chip label={'Jurídica'}variant='outlined' color='secondary' />);
+        }   
+  }
+  },
+  {
+    field: 'asunto',
+    headerName: 'Asunto',
+    // description: 'This column has a value getter and is not sortable.',
     sortable: false,
-    width: 160,
+    width: 200,
   //   valueGetter: (params) =>
   //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
    },
    {
-    field: 'estado',
+    field: 'estado_id',
     headerName: 'Estado',
     // type: 'number',
     width: 110,
-    editable: true,
+    
   },
   {
-    field: 'fecha',
+    field: 'created_at',
     headerName: 'Fecha Registro',
     // type: 'number',
-    width: 110,
-    editable: true,
+    width: 200,
+   
+    valueFormatter: (params) => {
+     
+      return dayjs(params.value).locale('zh-cn').format('DD/MM/YYYY HH:mm:ss A');
+    },
   },
   {
     field: 'actions', 
@@ -57,12 +127,13 @@ const columns = [
     sortable: false,
     type: 'actions',
     width: 110,  getActions: (params) => [
+    
       <GridActionsCellItem
       sx={{ color: blue[800] }}
       key={params.row.id}
       icon={<AccountTreeIcon />}
       label="Restrear"
-      // onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario, params.row.fechaComentario, params.row.telefono, params.row.messages) }}
+      onClick={() => { handleOpenTracking(params.row.oficinas) }}
       />,
       <GridActionsCellItem
         sx={{ color: cyan[800] }}
@@ -93,15 +164,6 @@ const columns = [
 
   }
 ];
-  
-  const rows = [
-    { id: 1,codigo:'323532',dni:23432343, nombre: 'Snow', documento: 'Jon', estado: 'Revisado', fecha:'2020-04-11' },
-    { id: 2,codigo:'323532',dni:23432343, nombre: 'Snow', documento: 'Jon', estado: 'Revisado', fecha:'2020-04-11' },
-    { id: 3,codigo:'323532',dni:23432343, nombre: 'Snow', documento: 'Jon', estado: 'Revisado', fecha:'2020-04-11' },
-    
-  ];
-
-export default function Documentos() {
   return (
     <>
     <Paper elevation={1} sx={{display:'flex', justifyContent:'space-between', padding:2,marginBottom:2, bgcolor:grey[200]}}>
@@ -112,25 +174,28 @@ export default function Documentos() {
         </Button>
     </Paper>
     <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}}  elevation={1}>
-      <Box sx={{ height: 400, width: '100%' }} padding={4}>
-       
-    <DataGrid
-      rows={rows}
-      columns={columns}
-      initialState={{
-        pagination: {
-          paginationModel: {
-            pageSize: 5,
-          },
-        },
-      }}
-      pageSizeOptions={[5]}
-      // checkboxSelection
-      // disableRowSelectionOnClick
-    />
-  </Box>
+            <Box sx={{ height: 400, width: '100%' }} padding={4}>
+            {!isLoading &&(
+              <DataGrid
+                  rows={data.data}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[5]}
+                  slots={{ toolbar: GridToolbar }}
+                 
+                  // disableRowSelectionOnClick
+                />
+            )}
+        
+            </Box>
     </Paper>
-    
+      <ModalTracking open={open} handleClose={handleCloseTrack} oficinas={oficinas} /> 
     </>
     
   )

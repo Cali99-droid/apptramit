@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DocumentoCollection;
 use App\Models\Documento;
+use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentoController extends Controller
 {
@@ -13,10 +16,63 @@ class DocumentoController extends Controller
     public function index()
     {
         //
+        return new DocumentoCollection(Documento::with('oficinas')->get());
     }
-    public function upload()
+    public function download($docName)
+    {
+        //actualizar estado del documento
+
+        $path = storage_path("app/pdfs/$docName");
+        if (!Storage::exists("pdfs/$docName")) {
+            abort(404, 'El archivo no existe.');
+        }
+
+        //
+        return response()->file($path);
+    }
+    public function upload(Request $request)
     {
         //
+        $request->validate([
+            'name' => 'required|string',
+            'pdfFile' => 'required|file|mimes:pdf|max:10240', // Validación del archivo PDF
+        ]);
+        $documento = new Documento();
+        $documento->tipo_persona = $request->input('personaType');
+        $documento->dni = $request->input('dni');
+        $documento->nombre_interesado = $request->input('name');
+        $documento->telefono = $request->input('telefono');
+        $documento->email = $request->input('email');
+        $documento->direccion = $request->input('direccion');
+        $documento->nombre_documento = $request->input('documentName');
+        $documento->folios = $request->input('folio');
+        $documento->asunto = $request->input('asunto');
+        $documento->estado_id = 1;
+
+
+        $pdfFile = $request->file('pdfFile');
+
+        // Generar un nombre único para el archivo
+        $uniqueName = time() . '_' . $pdfFile->getClientOriginalName();
+        $documento->dir = $uniqueName;
+        // Guardar el archivo en el directorio de almacenamiento
+        $pdfFile->storeAs('pdfs', $uniqueName);
+        //guradar documento
+        $documento->save();
+
+        //obtener id del documento
+        // Obtener el ID del pedido
+        $id =   $documento->id;
+        //guardar historial
+        $history = new History();
+        $history->oficina_id = 1;
+        $history->documento_id = $id;
+        $history->save();
+
+        return [
+            'message' => 'Se guardo el documento',
+
+        ];
     }
 
     /**
@@ -25,42 +81,46 @@ class DocumentoController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
-            'name' => 'required|string',
-            'pdfFile' => 'required|file|mimes:pdf|max:10240', // Validación del archivo PDF
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string',
+        //     'pdfFile' => 'required|file|mimes:pdf|max:10240', // Validación del archivo PDF
+        // ]);
         // $documento = new Documento();
-        // $documento->tipo_persona = $request->values['personaType'];
-        // $documento->dni = $request->values['dni'];
-        // $documento->nombre_interesado = $request->values['name'];
-        // $documento->telefono = $request->values['telefono'];
-        // $documento->email = $request->values['email'];
-        // $documento->direccion = $request->values['direccion'];
-        // $documento->nombre_documento = $request->values['documentName'];
-        // $documento->folios = $request->values['folio'];
-        // $documento->asunto = $request->values['asunto'];
+        // $documento->tipo_persona = $request->input('personaType');
+        // $documento->dni = $request->input('dni');
+        // $documento->nombre_interesado = $request->input('name');
+        // $documento->telefono = $request->input('telefono');
+        // $documento->email = $request->input('email');
+        // $documento->direccion = $request->input('direccion');
+        // $documento->nombre_documento = $request->input('documentName');
+        // $documento->folios = $request->input('folio');
+        // $documento->asunto = $request->input('asunto');
         // $documento->estado_id = 1;
-        // $pdfFile = $request->values['pdfFile'];
+
+
+        // $pdfFile = $request->file('pdfFile');
+
         // // Generar un nombre único para el archivo
-        $pdfFile = $request->file('pdfFile');
-        $uniqueName = time() . '_' . $pdfFile->getClientOriginalName();
+        // $uniqueName = time() . '_' . $pdfFile->getClientOriginalName();
+        // $documento->dir = $uniqueName;
+        // // Guardar el archivo en el directorio de almacenamiento
+        // $pdfFile->storeAs('pdfs', $uniqueName);
+        // //guradar documento
+        // $documento->save();
 
-        // Guardar el archivo en el directorio de almacenamiento
-        $pdfFile->storeAs('pdfs', $uniqueName);
-        //guradar documento
-        //guardar historial
+        // //obtener id del documento
+        // // Obtener el ID del pedido
+        // $id =   $documento->id;
+        // //guardar historial
+        // $history = new History();
+        // $history->oficina_id = 1;
+        // $history->documento_id = $id;
+        // $history->save();
 
+        // return [
+        //     'message' => 'Se guardo el documento',
 
-
-        // $documento->nombre_documento = $request->values['documentName'];
-
-        $name = $request->input('name');
-
-        return [
-            'message' => 'un mensaje post documetno',
-            'doc' =>   $pdfFile,
-            'name' =>  $name,
-        ];
+        // ];
     }
 
     /**

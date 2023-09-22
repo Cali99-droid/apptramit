@@ -54,7 +54,7 @@ export default function Oficinas() {
       Authorization: `Bearer ${token}`,
     },
   }).then(datos => datos.data)
-  const { data,  isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
+  const { data } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {

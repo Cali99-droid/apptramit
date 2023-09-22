@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Oficina extends Model
 {
     use HasFactory;
+    public function documentos()
+    {
+        return $this->belongsToMany(Documento::class, 'histories');
+    }
 }

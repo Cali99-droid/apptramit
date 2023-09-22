@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Documento extends Model
+class History extends Model
 {
     use HasFactory;
-    public function oficinas()
+    public function estado()
     {
-        return $this->belongsToMany(Oficina::class, 'histories')->withPivot('estado_id');
+        return $this->belongsTo(Estado::class);
     }
 }

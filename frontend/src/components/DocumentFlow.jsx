@@ -1,13 +1,29 @@
+/* eslint-disable react/prop-types */
 
 
 import {  Box, Chip, Paper, Step,   StepLabel,   Stepper,   Typography } from '@mui/material';
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import DoneIcon from '@mui/icons-material/Done';
 // eslint-disable-next-line react/prop-types
 const DocumentFlow = ({ offices, currentOffice }) => {
   const handleDelete = () => {
     console.info('You clicked the delete icon.');
   };
+
+   const CustomChip = ({estado})=>{
+
+    switch (estado) {
+      case 1:
+        return <Chip  label='Derivado' color='info' onDelete={handleDelete} deleteIcon={<PriorityHighIcon />}/>
+      case 2:
+        return <Chip label='Revisado' color='success' onDelete={handleDelete} deleteIcon={<DoneIcon />}/>  
+      case 3:
+        return <Chip label='Cerrado' color='error'/>   
+      default:
+        break;
+    }
+  }
   return (
     <div className='w-full'>
      
@@ -27,12 +43,12 @@ const DocumentFlow = ({ offices, currentOffice }) => {
                   <BeenhereIcon sx={{ color: '#FFF' }} />
                 </Box>
                   <StepLabel>
-                   {office.oficina}
+                   {office.nombre}
                    
                   </StepLabel>
                </Box>
               <Box display={'flex'} justifyContent={'center'} alignContent={'center'} mt={2}>
-              <Chip  onDelete={handleDelete} deleteIcon={<PriorityHighIcon />} label={office.estado} size="small" color={office.estado==='Derivado'? 'info':'warning'}variant='outlined' />
+              <CustomChip   estado={office.pivot.estado_id}   />
               </Box>
           </Step>
         ))}

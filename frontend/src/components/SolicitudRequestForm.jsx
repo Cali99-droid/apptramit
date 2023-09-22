@@ -63,6 +63,7 @@ const SolicitudRequestForm = () => {
           formData.append('asunto', values.asunto);
           formData.append('direccion', values.direccion);
           formData.append('telefono', values.telefono);
+          formData.append('email', values.email);
           formData.append('personaType', values.personaType);
           formData.append('name', values.name);
           formData.append('dni', values.dni);
@@ -74,7 +75,7 @@ const SolicitudRequestForm = () => {
        console.log(formData)
           // Realizar acciones cuando el formulario se envíe con éxito
           try {
-            await axios.post('http://localhost/api/documento',
+            await axios.post('http://localhost/api/solicitud',
               formData
             ,{
               headers: {

@@ -75,6 +75,7 @@ export const useAuth = ({ middleware, url }) => {
     if (middleware === "auth" && error) {
       navigate("/auth/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, error]);
 
   return {

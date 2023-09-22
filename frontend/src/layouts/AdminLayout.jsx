@@ -25,6 +25,7 @@ import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import { useAuth } from '../hooks/useAuth';
 
 const drawerWidth = 240;
 
@@ -94,6 +95,12 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function AdminLayout() {
+
+  const {user, error,logout} = useAuth({middleware:'admin'});
+ 
+  console.log(error)
+  console.log(user)
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -318,6 +325,7 @@ export default function AdminLayout() {
                     mr: open ? 3 : 'auto',
                     justifyContent: 'center',
                   }}
+                  onClick={logout}
                 >
                    <LogoutIcon />
                 </ListItemIcon>
