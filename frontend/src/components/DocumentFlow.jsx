@@ -15,11 +15,15 @@ const DocumentFlow = ({ offices, currentOffice }) => {
 
     switch (estado) {
       case 1:
-        return <Chip  label='Derivado' color='info' onDelete={handleDelete} deleteIcon={<PriorityHighIcon />}/>
+        return <Chip  label='Recibido' color='info' onDelete={handleDelete} deleteIcon={<PriorityHighIcon />}/>
       case 2:
         return <Chip label='Revisado' color='success' onDelete={handleDelete} deleteIcon={<DoneIcon />}/>  
       case 3:
-        return <Chip label='Cerrado' color='error'/>   
+        return <Chip label='Derivado' color='error'/>   
+        case 4:
+          return <Chip label='Observado' color='error'/>   
+          case 5:
+          return <Chip label='Atendido' color='success'/> 
       default:
         break;
     }

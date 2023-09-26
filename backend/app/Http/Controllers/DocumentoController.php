@@ -67,6 +67,7 @@ class DocumentoController extends Controller
         $history = new History();
         $history->oficina_id = 1;
         $history->documento_id = $id;
+        $history->estado_id = 1;
         $history->save();
 
         return [

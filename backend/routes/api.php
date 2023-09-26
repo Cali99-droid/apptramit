@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\OficinaController;
 use App\Http\Controllers\UserController;
+use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/oficina', OficinaController::class);
     Route::apiResource('/documento', DocumentoController::class);
+    Route::apiResource('/history', HistoryController::class);
 });
 
 Route::apiResource('/users', UserController::class);

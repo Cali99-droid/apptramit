@@ -21,6 +21,15 @@ class HistoryController extends Controller
     public function store(Request $request)
     {
         //
+
+        $history = new History();
+        $history->documento_id = $request->documentoId;
+        $history->oficina_id = $request->oficinaId;
+        $history->estado_id = 1;
+        $history->save();
+        return [
+            'message' => 'un mensaje post'
+        ];
     }
 
     /**

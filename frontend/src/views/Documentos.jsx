@@ -13,6 +13,7 @@ import * as dayjs from 'dayjs'
 import 'dayjs/locale/es' // load on demand
 import ModalTracking from '../components/modal/ModalTracking';
 import { useState } from 'react';
+import ModalDerivar from '../components/modal/ModalDerivar';
 dayjs.locale('es')
 const download = async(docName)=>{
   // const token = localStorage.getItem("AUTH_TOKEN");
@@ -41,12 +42,22 @@ const handleCloseTrack = ()=>{
   setOpen(false);
 }
 
+const [openDerivar, setOpenDerivar] = useState(false);
+const [documentoId, setDocumentoId] = useState()
+const handleCloseDerivar = ()=>{
+  setOpenDerivar(false);
+}
 
 const [oficinas, setOficinas] = useState([])
 const handleOpenTracking = (oficinas )=>{
 
 setOficinas(oficinas)
 setOpen(true)
+}
+
+const handleOpenDerivar=(id)=>{
+  setOpenDerivar(true);
+  setDocumentoId(id);
 }
 
 const columns = [
@@ -132,7 +143,7 @@ const columns = [
       sx={{ color: blue[800] }}
       key={params.row.id}
       icon={<AccountTreeIcon />}
-      label="Restrear"
+      label="Rastrear"
       onClick={() => { handleOpenTracking(params.row.oficinas) }}
       />,
       <GridActionsCellItem
@@ -140,7 +151,8 @@ const columns = [
         key={params.row.id}
         icon={<ReplyIcon />}
         label="Derivar"
-        // onClick={() => { hadleOpenCalificacion(params.row.calificaciones) }}TaskAltIcon
+        disabled={params.row.oficinas.length>1}
+         onClick={() => {handleOpenDerivar(params.row.id) }}
       />,
       <GridActionsCellItem
       sx={{ color: orange[800] }}
@@ -196,6 +208,7 @@ const columns = [
             </Box>
     </Paper>
       <ModalTracking open={open} handleClose={handleCloseTrack} oficinas={oficinas} /> 
+      <ModalDerivar open={openDerivar} handleClose={handleCloseDerivar} documentoId={documentoId}/>
     </>
     
   )
