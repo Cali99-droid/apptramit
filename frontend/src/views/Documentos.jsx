@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button, Chip, Link, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
@@ -14,7 +15,12 @@ import 'dayjs/locale/es' // load on demand
 import ModalTracking from '../components/modal/ModalTracking';
 import { useState } from 'react';
 import ModalDerivar from '../components/modal/ModalDerivar';
-dayjs.locale('es')
+import { useAuth } from '../hooks/useAuth';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+dayjs.locale('es') 
+const MySwal = withReactContent(Swal);
 const download = async(docName)=>{
   // const token = localStorage.getItem("AUTH_TOKEN");
   try {
@@ -30,6 +36,8 @@ const download = async(docName)=>{
 
 
 export default function Documentos() {
+  const {user} = useAuth({middleware:'auth'});
+  // console.log(user)
   const token = localStorage.getItem("AUTH_TOKEN");
   const fetcher = () => clienteAxios('/api/documento',{
     headers: {
@@ -43,7 +51,8 @@ const handleCloseTrack = ()=>{
 }
 
 const [openDerivar, setOpenDerivar] = useState(false);
-const [documentoId, setDocumentoId] = useState()
+const [documentoId, setDocumentoId] = useState();
+const [oficinaOrigenId, setOficinaOrigenId] = useState();
 const handleCloseDerivar = ()=>{
   setOpenDerivar(false);
 }
@@ -55,11 +64,85 @@ setOficinas(oficinas)
 setOpen(true)
 }
 
-const handleOpenDerivar=(id)=>{
+const handleOpenDerivar=(id, oficinas)=>{
+console.log(oficinas)
+  setOficinaOrigenId(oficinas[oficinas.length-1])
   setOpenDerivar(true);
   setDocumentoId(id);
 }
+const CustomChip = ({estado})=>{
 
+  switch (estado) {
+    case 1:
+      return <Chip  label='Recibido' color='info' />
+    case 2:
+      return <Chip label='Revisado' color='success' />  
+    case 3:
+      return <Chip label='Derivado' color='error'/>   
+    case 4:
+      return <Chip label='Observado' color='error'/>   
+    case 5:
+    return <Chip label='Atendido' color='success'/> 
+    default:
+      break;
+  }
+}
+
+const getEstado = (oficinas)=>{
+console.log(user.oficina_id)
+// console.log(oficinas[0].pivot.estado_id)
+  const oficinaAct = oficinas.filter(o=>o.id == user.oficina_id).shift()
+  console.log(oficinas)
+  
+  console.log(oficinaAct?.pivot.estado_id)
+  return <CustomChip estado={oficinaAct?.pivot.estado_id}/>;
+}
+
+const handleFin = (id,oficinas)=>{
+  setDocumentoId(id);
+  setOficinaOrigenId(oficinas[oficinas.length-1]);
+  MySwal.fire({
+    title: 'Esta seguro de marcar como antendido el documento?',
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: 'Si',
+    denyButtonText: `No`,
+  }).then((result) => {
+    const origenId = oficinaOrigenId?.id;
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      handleCerrar(origenId,documentoId)
+      Swal.fire('Saved!', '', 'success')
+    } else if (result.isDenied) {
+      Swal.fire('Changes are not saved', '', 'info')
+    }
+  })
+}
+const handleCerrar =async(origenId,documentoId)=>{
+
+   
+   const token = localStorage.getItem("AUTH_TOKEN");
+  
+     // Realizar acciones cuando el formulario se envíe con éxito
+     try {
+       await clienteAxios.put('/api/history',{
+           documentoId,origenId
+
+       },{
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+       })
+
+       alert('creado correcamente')
+       
+     } catch (error) {
+       console.log(error)
+     
+   }
+
+ 
+       }
 const columns = [
   {
     field:'id',
@@ -119,6 +202,13 @@ const columns = [
     headerName: 'Estado',
     // type: 'number',
     width: 110,
+    renderCell: ({row}) => {
+      // console.log(row.oficinas)
+   
+      return getEstado(row.oficinas)
+            // return (<CustomChip estado={row.estado_id} />);
+         
+    }
     
   },
   {
@@ -151,15 +241,15 @@ const columns = [
         key={params.row.id}
         icon={<ReplyIcon />}
         label="Derivar"
-        disabled={params.row.oficinas.length>1}
-         onClick={() => {handleOpenDerivar(params.row.id) }}
+        // disabled={params.row.oficinas.length>1}
+         onClick={() => {handleOpenDerivar(params.row.id, params.row.oficinas) }}
       />,
       <GridActionsCellItem
       sx={{ color: orange[800] }}
       key={params.row.id}
       icon={<DoneIcon />}
       label="Atender o Cerrar"
-      // onClick={() => { hadleOpenCalificacion(params.row.calificaciones) }}TaskAltIcon
+       onClick={() => { handleFin(params.row.id,params.row.oficinas) }}
     />,
      
       // <GridActionsCellItem
@@ -186,7 +276,7 @@ const columns = [
         </Button>
     </Paper>
     <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}}  elevation={1}>
-            <Box sx={{ height: 400, width: '100%' }} padding={4}>
+            <Box sx={{ height: 500, width: '100%' }} padding={4}>
             {!isLoading &&(
               <DataGrid
                   rows={data.data}
@@ -208,7 +298,7 @@ const columns = [
             </Box>
     </Paper>
       <ModalTracking open={open} handleClose={handleCloseTrack} oficinas={oficinas} /> 
-      <ModalDerivar open={openDerivar} handleClose={handleCloseDerivar} documentoId={documentoId}/>
+      <ModalDerivar open={openDerivar} handleClose={handleCloseDerivar} documentoId={documentoId} oficinaOrigenId={oficinaOrigenId}/>
     </>
     
   )

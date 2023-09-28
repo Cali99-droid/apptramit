@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import {  Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
+import {  Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
 import clienteAxios from "../../config/axios";
 import useSWR from "swr";
@@ -7,8 +7,8 @@ import useSWR from "swr";
 
 
 
-const ModalDerivar = ({handleClose,open,documentoId}) => {
-
+const ModalDerivar = ({handleClose,open,documentoId, oficinaOrigenId}) => {
+const origenId = oficinaOrigenId?.id;
     const token = localStorage.getItem("AUTH_TOKEN");
     const fetcher = () => clienteAxios('/api/oficina',{
       headers: {
@@ -16,7 +16,6 @@ const ModalDerivar = ({handleClose,open,documentoId}) => {
       },
     }).then(datos => datos.data)
     const { data,isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
-
 
     const [error, setError] = useState('');
      const [oficinaId, setOficinaId] = useState(0);
@@ -34,7 +33,7 @@ const handleSubmit=async()=>{
       // Realizar acciones cuando el formulario se envíe con éxito
       try {
         await clienteAxios.post('/api/history',{
-            oficinaId,documentoId
+            oficinaId,documentoId,origenId
 
         },{
           headers: {
@@ -57,7 +56,8 @@ const handleSubmit=async()=>{
 
             <DialogTitle >Seleccione Oficina  </DialogTitle>
             <DialogContent  >
-              {
+             <Box width={400} mt={1}>
+             {
                 isLoading?(
                     <p>cargando..</p>
                 ):(
@@ -66,12 +66,15 @@ const handleSubmit=async()=>{
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                           value={oficinaId}
+                            value={oficinaId}
                             label="oficina"
                             onChange={handleChange}
                             error={error !== ''}
                         >
-                            {data.data.map(e=>(<MenuItem key={e.id} value={e.id}>{e.nombre}</MenuItem>)
+                            <MenuItem  value={0}>--Seleccione--</MenuItem>
+                            {data.data.map(e=>(
+                            <MenuItem key={e.id} value={e.id}>{e.nombre}</MenuItem>
+                            )
                                 
                             )}
                             
@@ -81,6 +84,7 @@ const handleSubmit=async()=>{
                 </FormControl>
                 )
               }  
+             </Box>
             
 
             </DialogContent>

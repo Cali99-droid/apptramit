@@ -6,7 +6,7 @@ import DocumentFlow from "../DocumentFlow";
 
 const ModalTracking = ({oficinas ,handleClose,open}) => {
 
-console.log(oficinas)
+
 
   return (
     <Dialog open={open} onClose={handleClose}  maxWidth={'lg'}>
@@ -16,7 +16,7 @@ console.log(oficinas)
             <DocumentFlow
             offices={oficinas}
             currentOffice={oficinas.length-1}
-      />
+            />
 
 
             </DialogContent>
