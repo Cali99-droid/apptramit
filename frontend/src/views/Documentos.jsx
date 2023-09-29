@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Button, Chip, Link, Paper, Typography } from '@mui/material';
+import { Button, Chip, CircularProgress, Link, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -88,19 +88,26 @@ const CustomChip = ({estado})=>{
   }
 }
 
+const activeButton=(oficinas)=>{
+  const oficinaAct = oficinas.filter(o=>o.id == user?.oficina_id).shift();
+  if(oficinaAct?.pivot.estado_id === 5 || oficinaAct?.pivot.estado_id === 3 ){
+    return true
+  }else{
+    return false
+  }
+}
 const getEstado = (oficinas)=>{
-console.log(user.oficina_id)
+
 // console.log(oficinas[0].pivot.estado_id)
-  const oficinaAct = oficinas.filter(o=>o.id == user.oficina_id).shift()
-  console.log(oficinas)
-  
-  console.log(oficinaAct?.pivot.estado_id)
+  const oficinaAct = oficinas.filter(o=>o.id == user?.oficina_id).shift()
+
   return <CustomChip estado={oficinaAct?.pivot.estado_id}/>;
 }
-
+// const [historyId, setHistoryId] = useState();
 const handleFin = (id,oficinas)=>{
-  setDocumentoId(id);
-  setOficinaOrigenId(oficinas[oficinas.length-1]);
+  const oficinaAct = [...oficinas].shift();
+  // setHistoryId(oficinaAct?.pivot.id);
+console.log(oficinaAct?.pivot.id)
   MySwal.fire({
     title: 'Esta seguro de marcar como antendido el documento?',
     showDenyButton: true,
@@ -108,25 +115,25 @@ const handleFin = (id,oficinas)=>{
     confirmButtonText: 'Si',
     denyButtonText: `No`,
   }).then((result) => {
-    const origenId = oficinaOrigenId?.id;
+  
     /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
-      handleCerrar(origenId,documentoId)
+      handleCerrar(oficinaAct?.pivot.id)
       Swal.fire('Saved!', '', 'success')
     } else if (result.isDenied) {
       Swal.fire('Changes are not saved', '', 'info')
     }
   })
 }
-const handleCerrar =async(origenId,documentoId)=>{
+const handleCerrar =async(id)=>{
 
-   
+   console.log(id)
    const token = localStorage.getItem("AUTH_TOKEN");
   
      // Realizar acciones cuando el formulario se envíe con éxito
      try {
-       await clienteAxios.put('/api/history',{
-           documentoId,origenId
+       await clienteAxios.put(`/api/history/${id}`,{
+           documentoId,id
 
        },{
          headers: {
@@ -186,7 +193,7 @@ const columns = [
         if (row.tipo_persona ===2) {
           return (<Chip label={'Jurídica'}variant='outlined' color='secondary' />);
         }   
-  }
+    }
   },
   {
     field: 'asunto',
@@ -205,7 +212,7 @@ const columns = [
     renderCell: ({row}) => {
       // console.log(row.oficinas)
    
-      return getEstado(row.oficinas)
+      return !isLoading ? getEstado(row.oficinas) : <CircularProgress />
             // return (<CustomChip estado={row.estado_id} />);
          
     }
@@ -241,7 +248,7 @@ const columns = [
         key={params.row.id}
         icon={<ReplyIcon />}
         label="Derivar"
-        // disabled={params.row.oficinas.length>1}
+         disabled={activeButton(params.row.oficinas)}
          onClick={() => {handleOpenDerivar(params.row.id, params.row.oficinas) }}
       />,
       <GridActionsCellItem
@@ -249,6 +256,7 @@ const columns = [
       key={params.row.id}
       icon={<DoneIcon />}
       label="Atender o Cerrar"
+      disabled={activeButton(params.row.oficinas)}
        onClick={() => { handleFin(params.row.id,params.row.oficinas) }}
     />,
      

@@ -55,10 +55,15 @@ class HistoryController extends Controller
     public function update(Request $request, History $history)
     {
         //
-        $antHist = History::where([
-            ['oficina_id', $request->origenId],
-            ['documento_id', $request->documentoId]
-        ])->update(['estado_id' => 5]);
+        $history->estado_id = 5;
+        $history->save();
+        // $antHist = History::where([
+        //     ['id', $request->origenId],
+
+        // ])->update(['estado_id' => 5]);
+        return [
+            'history' => $history
+        ];
     }
 
     /**

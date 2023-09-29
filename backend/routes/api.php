@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/oficina', OficinaController::class);
     Route::apiResource('/documento', DocumentoController::class);
     Route::apiResource('/history', HistoryController::class);
+    Route::apiResource('/history', HistoryController::class);
 });
 
 Route::apiResource('/users', UserController::class);

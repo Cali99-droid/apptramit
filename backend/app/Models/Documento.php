@@ -10,6 +10,6 @@ class Documento extends Model
     use HasFactory;
     public function oficinas()
     {
-        return $this->belongsToMany(Oficina::class, 'histories')->withPivot('estado_id');
+        return $this->belongsToMany(Oficina::class, 'histories')->withPivot(['id', 'estado_id']);
     }
 }
