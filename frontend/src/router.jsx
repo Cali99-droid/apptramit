@@ -11,6 +11,7 @@ import Nuevo from './views/Nuevo'
 import Oficinas from './views/Oficinas'
 import OficinaLayout from './layouts/OficinaLayout'
 import Registro from './views/Registro'
+import Home from './views/Home'
 // import Login from './views/Login'
 
 // import Layout from './layouts/Layout'
@@ -28,11 +29,15 @@ const router = createBrowserRouter([
         element:<Layout />, 
         children:[{
             index:true,
-            element: <Inicio/>
+            element: <Home/>
           },
           {
             path:'/resultado',
              element: <Flujo/>
+          },
+          {
+            path:'/consulta',
+             element: <Inicio/>
           },
           {
             path:'/solicitud',

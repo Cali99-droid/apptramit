@@ -5,10 +5,18 @@ import DocumentFlow from "../components/DocumentFlow";
 export default function Flujo() {
     const documentFlowData = {
         offices: [
-          {oficina:'Oficina A',estado:'Derivado'},
-          {oficina:'Oficina B',estado:'Derivado'},
-          {oficina:'Oficina C',estado:'Derivado'},
-          {oficina:'Oficina D',estado:'Por revisar'},
+          {oficina:'Oficina A',estado:'Derivado',pivot:{
+            estado_id:2
+          }},
+          {oficina:'Oficina B',estado:'Derivado',pivot:{
+            estado_id:2
+          }},
+          {oficina:'Oficina C',estado:'Derivado',pivot:{
+            estado_id:2
+          }},
+          {oficina:'Oficina D',estado:'Por revisar',pivot:{
+            estado_id:2
+          }},
          
           
         ],

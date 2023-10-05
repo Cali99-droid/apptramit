@@ -6,7 +6,7 @@ export default function Inicio() {
       <Typography
         variant="h1"
         fontSize={30}
-        fontWeight={"bold"}
+        fontWeight={"bold"} 
         textAlign={"center"}
       >
         Bienvenido al Sistema de trámite documentario

@@ -50,12 +50,12 @@ const Header = () => {
           </Typography>
          <Box display={'flex'} gap={2}>
          <Link to={'/'}>
-                <Button variant='outlined'  color="inherit"  >
+                <Button variant='text'  color="inherit"  >
                     Consulta
                 </Button>
                 </Link>
                 <Link to={'/solicitud'}>
-                <Button variant='outlined'  color="inherit"  >
+                <Button variant='text'  color="inherit"  >
                     Solicitud de trámite
                     
                 </Button>
@@ -136,7 +136,7 @@ const Header = () => {
                
             
                 <Link to={'/auth/login'}>
-                <Button variant='contained'  color="secondary" endIcon={<LoginIcon/>} >
+                <Button variant='text' color="inherit" endIcon={<LoginIcon/>} >
                     Acceder
                     
                 </Button>

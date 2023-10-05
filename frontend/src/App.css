@@ -11,3 +11,27 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   
 }
+/* TuComponente.css */
+
+.bg-image {
+  /* Define la imagen de fondo */
+  background-image: url('/img/muni.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 100vh; /* Ajusta la altura según tus necesidades */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.cont {
+  /* Define el contenedor del texto superpuesto */
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo con opacidad */
+  border-radius: 8px; /* Ajusta el redondeo de las esquinas */
+  text-align: center;
+
+}
+
+/* Estilos adicionales de Tailwind CSS */
