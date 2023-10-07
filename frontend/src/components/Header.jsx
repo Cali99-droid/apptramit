@@ -49,7 +49,7 @@ const Header = () => {
             SISTRA
           </Typography>
          <Box display={'flex'} gap={2}>
-         <Link to={'/'}>
+         <Link to={'/consulta'}>
                 <Button variant='text'  color="inherit"  >
                     Consulta
                 </Button>
