@@ -9,6 +9,7 @@ import '../App.css'
 import { cyan, grey } from '@mui/material/colors';
 import clienteAxios from '../config/axios';
 import useSWR from 'swr';
+
 const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
@@ -55,9 +56,12 @@ export default function Oficinas() {
     },
   }).then(datos => datos.data)
   const { data } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
+console.log(data)
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
+
     setModalOpen(true);
   };
 

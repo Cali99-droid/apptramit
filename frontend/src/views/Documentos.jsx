@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import { Button, Chip, CircularProgress, Link, Paper, Typography } from '@mui/material';
+import { Button, Chip,  Link, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridToolbar, esES } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { blue,  cyan,  grey,  orange } from '@mui/material/colors';
@@ -37,14 +37,34 @@ const download = async(docName)=>{
 
 export default function Documentos() {
   const {user} = useAuth({middleware:'auth'});
-  // console.log(user)
+   console.log(user)
   const token = localStorage.getItem("AUTH_TOKEN");
   const fetcher = () => clienteAxios('/api/documento',{
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }).then(datos => datos.data)
+  }).then(datos => datos?.data)
   const { data,isLoading } = useSWR('/api/documento', fetcher, {refreshInterval: 10000})
+
+  // if(!isLoading){
+  //   const rows = data.data.filter(doc=>{
+  //    const res= doc.oficinas.filter(ofi=>ofi.id === user?.oficina_id);
+  //     if(res.length>0){
+  //       return doc;
+  //     }
+  //   })
+  // console.log(rows)
+  // }
+  const isAnother = (data)=>{
+    const rows = data.filter(doc=>{
+      const res= doc.oficinas.filter(ofi=>ofi.id === user?.oficina_id);
+       if(res.length>0){
+         return doc;
+       }
+     })
+
+     return rows;
+  }
 const [open, setOpen] = useState(false);
 const handleCloseTrack = ()=>{
   setOpen(false);
@@ -65,13 +85,14 @@ setOpen(true)
 }
 
 const handleOpenDerivar=(id, oficinas)=>{
-console.log(oficinas)
+
   setOficinaOrigenId(oficinas[oficinas.length-1])
   setOpenDerivar(true);
   setDocumentoId(id);
 }
-const CustomChip = ({estado})=>{
-
+const CustomChip = ({oficinas})=>{
+  const oficinaAct = oficinas.filter(o=>o.id == user?.oficina_id).shift()
+  const estado = oficinaAct?.pivot.estado_id;
   switch (estado) {
     case 1:
       return <Chip  label='Recibido' color='info' />
@@ -97,15 +118,30 @@ const activeButton=(oficinas)=>{
   }
 }
 const getEstado = (oficinas)=>{
-
-// console.log(oficinas[0].pivot.estado_id)
+ 
+ 
   const oficinaAct = oficinas.filter(o=>o.id == user?.oficina_id).shift()
-
-  return <CustomChip estado={oficinaAct?.pivot.estado_id}/>;
+  const estado = oficinaAct?.pivot.estado_id;
+  switch (estado) {
+    case 1:
+      return 'Recibido' 
+    case 2:
+      return 'Revisado' 
+    case 3:
+      return 'Derivado'  
+    case 4:
+      return 'Observado'
+    case 5:
+    return  'Atendido' 
+    default:
+      break;
+  }
 }
 // const [historyId, setHistoryId] = useState();
 const handleFin = (id,oficinas)=>{
-  const oficinaAct = [...oficinas].shift();
+  const oficinaAct = [...oficinas].pop();
+
+
   // setHistoryId(oficinaAct?.pivot.id);
 console.log(oficinaAct?.pivot.id)
   MySwal.fire({
@@ -127,7 +163,7 @@ console.log(oficinaAct?.pivot.id)
 }
 const handleCerrar =async(id)=>{
 
-   console.log(id)
+  
    const token = localStorage.getItem("AUTH_TOKEN");
   
      // Realizar acciones cuando el formulario se envíe con éxito
@@ -150,10 +186,17 @@ const handleCerrar =async(id)=>{
 
  
        }
+
+       const renderStatus =({row}) => {
+               return (<CustomChip oficinas={row.oficinas} />);
+             
+        }
+       
+
 const columns = [
   {
     field:'id',
-    headerName:'ID',
+    headerName:'N°',
     width:50
   },
   {
@@ -207,26 +250,24 @@ const columns = [
    {
     field: 'estado_id',
     headerName: 'Estado',
-    // type: 'number',
+     type: 'string',
     width: 110,
-    renderCell: ({row}) => {
-      // console.log(row.oficinas)
-   
-      return !isLoading ? getEstado(row.oficinas) : <CircularProgress />
-            // return (<CustomChip estado={row.estado_id} />);
-         
-    }
+    valueGetter: ({row}) => {
+     
+      return getEstado(row.oficinas);
+    },
+    renderCell:renderStatus
     
   },
   {
     field: 'created_at',
     headerName: 'Fecha Registro',
-    // type: 'number',
+    type: 'date',
     width: 200,
    
     valueFormatter: (params) => {
      
-      return dayjs(params.value).locale('zh-cn').format('DD/MM/YYYY HH:mm:ss A');
+      return dayjs(params.value).format('DD/MM/YYYY hh:mm');
     },
   },
   {
@@ -274,6 +315,11 @@ const columns = [
 
   }
 ];
+let rows = [];
+if(!isLoading){
+   rows = user?.oficina_id === 1 ? data.data : isAnother(data?.data);
+}
+
   return (
     <>
     <Paper elevation={1} sx={{display:'flex', justifyContent:'space-between', padding:2,marginBottom:2, bgcolor:grey[200]}}>
@@ -287,18 +333,19 @@ const columns = [
             <Box sx={{ height: 500, width: '100%' }} padding={4}>
             {!isLoading &&(
               <DataGrid
-                  rows={data.data}
+              localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                  rows={rows}
                   columns={columns}
                   initialState={{
                     pagination: {
                       paginationModel: {
-                        pageSize: 5,
+                        pageSize: 10,
                       },
                     },
                   }}
                   pageSizeOptions={[5]}
                   slots={{ toolbar: GridToolbar }}
-                 
+               
                   // disableRowSelectionOnClick
                 />
             )}

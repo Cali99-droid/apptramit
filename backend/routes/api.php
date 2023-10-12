@@ -21,14 +21,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    // Route::get('/user', function (Request $request) {
+    //     return $request->user();
+    // });
+    Route::get('/user', [AuthController::class, 'getUser']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/oficina', OficinaController::class);
     Route::apiResource('/documento', DocumentoController::class);
     Route::apiResource('/history', HistoryController::class);
-    Route::apiResource('/history', HistoryController::class);
+    // Route::apiResource('/history', HistoryController::class);
 });
 
 Route::apiResource('/users', UserController::class);

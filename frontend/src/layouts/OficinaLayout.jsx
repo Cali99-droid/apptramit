@@ -92,8 +92,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function OficinaLayout() {
 
-  const {user, error,logout} = useAuth({middleware:'auth'});
- 
+  const {user, error,logout,oficina} = useAuth({middleware:'auth'});
+
   console.log(error)
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -142,7 +142,7 @@ export default function OficinaLayout() {
             SISTRA 
           </Typography>
           <Typography>
-            {`Bienvenido ${user?.name}`}
+            {`Bienvenido ${user?.name} - ${oficina?.nombre}`}
           </Typography>
         </Toolbar>
       </AppBar>

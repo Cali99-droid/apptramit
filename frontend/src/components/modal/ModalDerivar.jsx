@@ -72,7 +72,7 @@ const handleSubmit=async()=>{
                             error={error !== ''}
                         >
                             <MenuItem  value={0}>--Seleccione--</MenuItem>
-                            {data.data.map(e=>(
+                            {data?.data.map(e=>(
                             <MenuItem key={e.id} value={e.id}>{e.nombre}</MenuItem>
                             )
                                 

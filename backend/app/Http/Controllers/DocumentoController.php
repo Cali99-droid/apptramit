@@ -16,7 +16,7 @@ class DocumentoController extends Controller
     public function index()
     {
         //
-        return new DocumentoCollection(Documento::with('oficinas')->get());
+        return new DocumentoCollection(Documento::with('oficinas')->orderBy('id', 'DESC')->get());
     }
     public function download($docName)
     {

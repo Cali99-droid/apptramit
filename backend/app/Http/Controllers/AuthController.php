@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistroRequest;
+use App\Http\Resources\OficinaCollection;
+use App\Models\Oficina;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +25,7 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
             'oficina_id' => $data['office']
         ]);
+
 
         // Retornar una respuesta
         return [
@@ -58,6 +61,16 @@ class AuthController extends Controller
 
         return [
             'user' => null
+        ];
+    }
+
+    public function getUser(Request $request)
+    {
+        $user =  $request->user();
+        $oficina = Oficina::where('id', '=', $user->oficina_id)->first();
+        return [
+            'user' => $user,
+            'oficina' =>  $oficina
         ];
     }
 }

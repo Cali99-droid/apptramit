@@ -96,7 +96,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function AdminLayout() {
 
-  const {user, error,logout} = useAuth({middleware:'admin'});
+  const {user, error,logout,oficina} = useAuth({middleware:'admin'});
  
   console.log(error)
   console.log(user)
@@ -155,6 +155,9 @@ export default function AdminLayout() {
             }}
           >
             SISTRA
+          </Typography>
+          <Typography>
+            {`Bienvenido ${user?.name} - ${oficina?.nombre}`}
           </Typography>
           
         </Toolbar>
