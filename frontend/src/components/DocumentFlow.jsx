@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 
-import {  Box, Chip, Paper, Step,   StepLabel,   Stepper,   Typography } from '@mui/material';
+import {  Alert, AlertTitle, Box, Chip,  Step,   StepLabel,   Stepper,   Typography } from '@mui/material';
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import DoneIcon from '@mui/icons-material/Done';
@@ -31,7 +31,7 @@ const DocumentFlow = ({ offices, currentOffice }) => {
   return (
     <div className='w-full'>
      
-     <Paper elevation={6} sx={{overflow:'auto'}}>
+     <Box  sx={{overflow:'auto'}}>
        <Box className={'text-center'}>
          <Typography variant="h6">Flujo del Documento</Typography>
       </Box>
@@ -54,12 +54,18 @@ const DocumentFlow = ({ offices, currentOffice }) => {
               <Box display={'flex'} justifyContent={'center'} alignContent={'center'} mt={2}>
               <CustomChip   estado={office.pivot.estado_id}   />
               </Box>
+              <Box mt={2} width={200}>
+                {office.pivot.obs === null ? '':(
+                   <Alert severity="info"> <AlertTitle><strong>Comentario</strong></AlertTitle>{office.pivot.obs}</Alert>
+                )}
+             
+              </Box>
           </Step>
         ))}
       </Stepper>
       </Box>
      
-     </Paper>
+     </Box>
      
     
     </div>

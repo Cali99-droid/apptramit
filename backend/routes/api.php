@@ -5,8 +5,7 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\OficinaController;
 use App\Http\Controllers\UserController;
-use App\Models\History;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,15 +26,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/oficina', OficinaController::class);
+    Route::apiResource('/users', UserController::class);
     Route::apiResource('/documento', DocumentoController::class);
     Route::apiResource('/history', HistoryController::class);
     // Route::apiResource('/history', HistoryController::class);
 });
 
-Route::apiResource('/users', UserController::class);
+
 // Autenticacion
 Route::post('/registro', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/solicitud', [DocumentoController::class, 'upload']);
+Route::get('/consulta/{code}', [DocumentoController::class, 'consulta']);
 Route::get('/download/{docName}', [DocumentoController::class, 'download']);
 // Route::post('/login', [AuthController::class, 'login']);

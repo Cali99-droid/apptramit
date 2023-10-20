@@ -45,7 +45,13 @@ class OficinaController extends Controller
     public function update(Request $request, Oficina $oficina)
     {
         //
+        $oficina->nombre = $request->officeName;
+        $oficina->save();
+        return [
+            'message' => 'Se guardo correctamente'
+        ];
     }
+
 
     /**
      * Remove the specified resource from storage.

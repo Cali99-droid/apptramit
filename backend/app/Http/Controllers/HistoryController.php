@@ -25,7 +25,7 @@ class HistoryController extends Controller
         $antHist = History::where([
             ['oficina_id', $request->origenId],
             ['documento_id', $request->documentoId]
-        ])->update(['estado_id' => 3]);
+        ])->update(['estado_id' => 3, 'obs' => $request->obs]);
 
 
 
@@ -34,6 +34,7 @@ class HistoryController extends Controller
         $history->documento_id = $request->documentoId;
         $history->oficina_id = $request->oficinaId;
         $history->estado_id = 1;
+
         $history->save();
         return [
             'message' => 'un mensaje post',
@@ -56,6 +57,7 @@ class HistoryController extends Controller
     {
         //
         $history->estado_id = 5;
+        $history->obs = $request->obs;
         $history->save();
         // $antHist = History::where([
         //     ['id', $request->origenId],

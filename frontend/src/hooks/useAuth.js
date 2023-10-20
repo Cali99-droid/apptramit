@@ -24,7 +24,7 @@ export const useAuth = ({ middleware, url }) => {
   );
   const user = data?.user;
   const oficina = data?.oficina;
-  console.log(data);
+
   const login = async (datos, setErrores) => {
     try {
       const { data } = await clienteAxios.post("/api/login", datos);
@@ -48,6 +48,7 @@ export const useAuth = ({ middleware, url }) => {
   };
 
   const logout = async () => {
+    console.log("saliendo");
     try {
       await clienteAxios.post("/api/logout", null, {
         headers: {
@@ -62,7 +63,6 @@ export const useAuth = ({ middleware, url }) => {
   };
 
   useEffect(() => {
-    console.log(user);
     if (middleware === "guest" && url && user) {
       navigate(url);
     }

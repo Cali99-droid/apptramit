@@ -23,11 +23,11 @@ const ModalTracking = ({oficinas ,handleClose,open}) => {
             <DialogActions>
 
 
-                <Button variant='outlined' color='error' onClick={handleClose}   >
+                {/* <Button variant='outlined' color='error' onClick={handleClose}   >
                     Cancelar
-                </Button>
-                <Button variant='outlined' onClick={()=>console.log('click en trakink')} >
-                    Guardar
+                </Button> */}
+                <Button variant='outlined' onClick={handleClose}  >
+                    Aceptar
                 </Button>
             </DialogActions>
 

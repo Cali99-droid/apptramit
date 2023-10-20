@@ -7,6 +7,7 @@ use App\Models\Documento;
 use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DocumentoController extends Controller
 {
@@ -45,15 +46,16 @@ class DocumentoController extends Controller
         $documento->email = $request->input('email');
         $documento->direccion = $request->input('direccion');
         $documento->nombre_documento = $request->input('documentName');
+        $documento->tipo = $request->input('documentType');
         $documento->folios = $request->input('folio');
         $documento->asunto = $request->input('asunto');
         $documento->estado_id = 1;
-
+        $documento->code = Str::upper(Str::random(6));
 
         $pdfFile = $request->file('pdfFile');
 
         // Generar un nombre único para el archivo
-        $uniqueName = time() . '_' . $pdfFile->getClientOriginalName();
+        $uniqueName = 'EXP' . '_' . time() . $pdfFile->getClientOriginalName();
         $documento->dir = $uniqueName;
         // Guardar el archivo en el directorio de almacenamiento
         $pdfFile->storeAs('pdfs', $uniqueName);
@@ -71,7 +73,7 @@ class DocumentoController extends Controller
         $history->save();
 
         return [
-            'message' => 'Se guardo el documento',
+            'code' => $documento->code
 
         ];
     }
@@ -129,7 +131,12 @@ class DocumentoController extends Controller
      */
     public function show(Documento $documento)
     {
-        //
+    }
+    public function consulta($code)
+    {
+
+
+        return new DocumentoCollection(Documento::with('oficinas')->where('code', '=', $code)->orderBy('id', 'DESC')->get());
     }
 
     /**
@@ -146,5 +153,7 @@ class DocumentoController extends Controller
     public function destroy(Documento $documento)
     {
         //
+
+
     }
 }

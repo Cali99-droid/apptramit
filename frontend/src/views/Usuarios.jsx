@@ -1,44 +1,57 @@
 import { Backdrop, Button, CircularProgress, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import useSWR from 'swr'
 import '../App.css'
 import { useState } from 'react';
 import UserCreationModal from '../components/UserCreationModal';
-import { grey } from '@mui/material/colors';
+import { cyan, grey } from '@mui/material/colors';
 import clienteAxios from '../config/axios';
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'name',
-    headerName: 'First name',
+    headerName: 'Nombres',
     width: 150,
     editable: true,
   },
   {
     field: 'email',
-    headerName: 'Last name',
+    headerName: 'Correo',
     width: 150,
     editable: true,
   },
   {
-    field: 'oficina_id',
-    headerName: 'Age',
+    field: 'oficina',
+    headerName: 'Oficina',
     type: 'number',
-    width: 110,
-    editable: true,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
+    width: 200,
+
     valueGetter: (params) =>
-      `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
+      params.row.oficina.nombre 
+  }
+  ,{
+    field: 'actions', 
+    headerName: 'Editar', 
+    sortable: false,
+    type: 'actions',
+    width: 110,  getActions: (params) => [
+      
+   
+      <GridActionsCellItem
+        sx={{ color: cyan[800] }}
+        key={params.row.id}
+        icon={<ModeEditIcon />}
+        label="Editar"
+        //  onClick={() => { handleEdit(params.row.id, params.row.nombre) }}
+      />
+   
+    ]
+
+  }
+ 
 ];
 
 // const rows = [
@@ -53,9 +66,14 @@ const columns = [
 //   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 // ];
 export default function Usuarios() {
+  const token = localStorage.getItem("AUTH_TOKEN");
   const [modalOpen, setModalOpen] = useState(false);
-  const fetcher = () => clienteAxios('/api/users').then(datos => datos.data)
-  const { data,  isLoading } = useSWR('/api/productos', fetcher, {refreshInterval: 10000})
+  const fetcher = () => clienteAxios('/api/users',{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then(datos => datos.data)
+  const { data,  isLoading } = useSWR('/api/users', fetcher, {refreshInterval: 10000})
 //error,
   const handleOpenModal = () => {
     setModalOpen(true);

@@ -1,14 +1,18 @@
 /* eslint-disable react/prop-types */
-import {  Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
+import {  Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import { useState } from "react";
 import clienteAxios from "../../config/axios";
 import useSWR from "swr";
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import { useAuth } from "../../hooks/useAuth";
 
 
 
 
 const ModalDerivar = ({handleClose,open,documentoId, oficinaOrigenId}) => {
-const origenId = oficinaOrigenId?.id;
+    const origenId = oficinaOrigenId?.id;
+    const {user} = useAuth({middleware:'auth'});
     const token = localStorage.getItem("AUTH_TOKEN");
     const fetcher = () => clienteAxios('/api/oficina',{
       headers: {
@@ -18,22 +22,34 @@ const origenId = oficinaOrigenId?.id;
     const { data,isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
 
     const [error, setError] = useState('');
-     const [oficinaId, setOficinaId] = useState(0);
+    const [oficinaId, setOficinaId] = useState(0);
     const handleChange = (event) => {
         console.log(event.target.value)
+        if(event.target.value>0){
+          setError(false)
+        }
         setOficinaId(event.target.value);
       };
-const handleSubmit=async()=>{
-   console.log(oficinaId,documentoId)
-    
+
+
+    const [obs, setObs] = useState('');
+    const onObsChange = (event) => {
+     
+      setObs(event.target.value);
+
+  }
+    const handleSubmit=async()=>{
+     console.log(oficinaId,documentoId,obs)
+   
+
     const token = localStorage.getItem("AUTH_TOKEN");
-    if (oficinaId === 0) {
+    if (oficinaId === 0 || oficinaId < 1) {
       setError('seleccione una oficina');
     } else {
       // Realizar acciones cuando el formulario se envíe con éxito
       try {
         await clienteAxios.post('/api/history',{
-            oficinaId,documentoId,origenId
+            oficinaId,documentoId,origenId,obs
 
         },{
           headers: {
@@ -41,10 +57,12 @@ const handleSubmit=async()=>{
           },
         })
 
-        alert('creado correcamente')
+        toast.success('Derivado Correctamente', {theme:'colored'})
+        handleClose();
         
       } catch (error) {
         console.log(error)
+        toast.error('Hubo un error', {theme:'colored'})
       }
     }
 
@@ -57,10 +75,12 @@ const handleSubmit=async()=>{
             <DialogTitle >Seleccione Oficina  </DialogTitle>
             <DialogContent  >
              <Box width={400} mt={1}>
+             
              {
                 isLoading?(
                     <p>cargando..</p>
                 ):(
+                
                 <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Oficina</InputLabel>
                         <Select
@@ -69,11 +89,11 @@ const handleSubmit=async()=>{
                             value={oficinaId}
                             label="oficina"
                             onChange={handleChange}
-                            error={error !== ''}
+                            error={error}
                         >
                             <MenuItem  value={0}>--Seleccione--</MenuItem>
                             {data?.data.map(e=>(
-                            <MenuItem key={e.id} value={e.id}>{e.nombre}</MenuItem>
+                            <MenuItem key={e.id} value={e.id} disabled={user?.oficina_id===e.id}>{e.nombre}</MenuItem>
                             )
                                 
                             )}
@@ -84,6 +104,21 @@ const handleSubmit=async()=>{
                 </FormControl>
                 )
               }  
+             <FormControl fullWidth sx={{ mt: 2 }}>
+                 <TextField
+                id="filled-multiline-flexible"
+                label="Observación"
+                multiline
+                maxRows={4}
+                variant="outlined"
+                onChange={onObsChange}
+                value={obs}
+                 />
+                 <FormHelperText id="component-helper-text">
+                    Opcional
+                 </FormHelperText>
+              </FormControl>
+              
              </Box>
             
 

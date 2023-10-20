@@ -7,8 +7,7 @@ import {
   Button,
   FormControl,
   InputLabel,
-  Select,
-  MenuItem,
+
   Grid,
   Input,
 } from '@mui/material';
@@ -115,24 +114,20 @@ const DocumentRequestForm = () => {
             required
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel>Tipo de documento</InputLabel>
-            <Select
-              label="Tipo de documento"
-              name="documentType"
-              value={formik.values.documentType}
-              onChange={formik.handleChange}
-              error={formik.touched.documentType && Boolean(formik.errors.documentType)}
-              helperText={formik.touched.documentType && formik.errors.documentType}
-              required
-            >
-              <MenuItem value="Tipo 1">Tipo 1</MenuItem>
-              <MenuItem value="Tipo 2">Tipo 2</MenuItem>
-              <MenuItem value="Tipo 3">Tipo 3</MenuItem>
-            </Select>
-          </FormControl>
+        <Grid item xs={12} sm={6}> 
+          <TextField
+            label="Tipo de documento"
+            fullWidth
+            variant="outlined"
+            name="folio"
+            value={formik.values.documentType}
+            onChange={formik.handleChange}
+            error={formik.touched.documentType && Boolean(formik.errors.documentType)}
+            helperText={formik.touched.documentType && formik.errors.documentType}
+            required
+          /> 
         </Grid>
+       
         <Grid item xs={12}>
         <FormControl fullWidth>
             {formik.values.pdfFile ? (

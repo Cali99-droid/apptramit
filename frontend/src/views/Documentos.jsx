@@ -16,11 +16,12 @@ import ModalTracking from '../components/modal/ModalTracking';
 import { useState } from 'react';
 import ModalDerivar from '../components/modal/ModalDerivar';
 import { useAuth } from '../hooks/useAuth';
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+// import Swal from 'sweetalert2'
+// import withReactContent from 'sweetalert2-react-content'
+import ModalCerrar from '../components/modal/ModalCerrar';
 
 dayjs.locale('es') 
-const MySwal = withReactContent(Swal);
+// const MySwal = withReactContent(Swal);
 const download = async(docName)=>{
   // const token = localStorage.getItem("AUTH_TOKEN");
   try {
@@ -37,7 +38,7 @@ const download = async(docName)=>{
 
 export default function Documentos() {
   const {user} = useAuth({middleware:'auth'});
-   console.log(user)
+
   const token = localStorage.getItem("AUTH_TOKEN");
   const fetcher = () => clienteAxios('/api/documento',{
     headers: {
@@ -45,7 +46,7 @@ export default function Documentos() {
     },
   }).then(datos => datos?.data)
   const { data,isLoading } = useSWR('/api/documento', fetcher, {refreshInterval: 10000})
-
+console.log(data)
   // if(!isLoading){
   //   const rows = data.data.filter(doc=>{
   //    const res= doc.oficinas.filter(ofi=>ofi.id === user?.oficina_id);
@@ -79,7 +80,7 @@ const handleCloseDerivar = ()=>{
 
 const [oficinas, setOficinas] = useState([])
 const handleOpenTracking = (oficinas )=>{
-
+console.log(oficinas)
 setOficinas(oficinas)
 setOpen(true)
 }
@@ -107,6 +108,21 @@ const CustomChip = ({oficinas})=>{
     default:
       break;
   }
+}
+
+const [openClose, setOpenClose] = useState(false);
+const [oficinaAct, setOficinaAct] = useState({})
+console.log(oficinaAct)
+const handleCloseClose = ()=>{
+  setOpenClose(false)
+
+}
+const handleOpenClose =(oficinas)=>{
+  const oficinaAct = [...oficinas].pop();
+  setOficinaAct(oficinaAct)
+  setOpenClose(true)
+  console.log(oficinaAct)
+
 }
 
 const activeButton=(oficinas)=>{
@@ -138,54 +154,54 @@ const getEstado = (oficinas)=>{
   }
 }
 // const [historyId, setHistoryId] = useState();
-const handleFin = (id,oficinas)=>{
-  const oficinaAct = [...oficinas].pop();
+// const handleFin = (oficinas)=>{
+//   const oficinaAct = [...oficinas].pop();
 
 
-  // setHistoryId(oficinaAct?.pivot.id);
-console.log(oficinaAct?.pivot.id)
-  MySwal.fire({
-    title: 'Esta seguro de marcar como antendido el documento?',
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: 'Si',
-    denyButtonText: `No`,
-  }).then((result) => {
+//   // setHistoryId(oficinaAct?.pivot.id);
+// console.log(oficinaAct?.pivot.id)
+//   MySwal.fire({
+//     title: 'Esta seguro de marcar como antendido el documento?',
+//     showDenyButton: true,
+//     showCancelButton: true,
+//     confirmButtonText: 'Si',
+//     denyButtonText: `No`,
+//   }).then((result) => {
   
-    /* Read more about isConfirmed, isDenied below */
-    if (result.isConfirmed) {
-      handleCerrar(oficinaAct?.pivot.id)
-      Swal.fire('Saved!', '', 'success')
-    } else if (result.isDenied) {
-      Swal.fire('Changes are not saved', '', 'info')
-    }
-  })
-}
-const handleCerrar =async(id)=>{
+//     /* Read more about isConfirmed, isDenied below */
+//     if (result.isConfirmed) {
+//       handleCerrar(oficinaAct?.pivot.id)
+//       Swal.fire('Saved!', '', 'success')
+//     } else if (result.isDenied) {
+//       Swal.fire('Changes are not saved', '', 'info')
+//     }
+//   })
+// }
+// const handleCerrar =async(id)=>{
 
   
-   const token = localStorage.getItem("AUTH_TOKEN");
+//    const token = localStorage.getItem("AUTH_TOKEN");
   
-     // Realizar acciones cuando el formulario se envíe con éxito
-     try {
-       await clienteAxios.put(`/api/history/${id}`,{
-           documentoId,id
+//      // Realizar acciones cuando el formulario se envíe con éxito
+//      try {
+//        await clienteAxios.put(`/api/history/${id}`,{
+//            documentoId,id
 
-       },{
-         headers: {
-           Authorization: `Bearer ${token}`,
-         },
-       })
+//        },{
+//          headers: {
+//            Authorization: `Bearer ${token}`,
+//          },
+//        })
 
-       alert('creado correcamente')
+//        alert('creado correcamente')
        
-     } catch (error) {
-       console.log(error)
+//      } catch (error) {
+//        console.log(error)
      
-   }
+//    }
 
  
-       }
+// }
 
        const renderStatus =({row}) => {
                return (<CustomChip oficinas={row.oficinas} />);
@@ -212,6 +228,18 @@ const columns = [
     }
   },
   {
+    field: 'tipo',
+    headerName: 'Tipo',
+    width: 100,
+    editable: true,
+  },
+  {
+    field: 'folios',
+    headerName: 'N° Folios',
+    width: 100,
+    editable: true,
+  },
+  {
     field: 'dni',
     headerName: 'DNI',
     width: 100,
@@ -222,6 +250,28 @@ const columns = [
     headerName: 'Nombre',
     // type: 'number',
     width: 250,
+    editable: true,
+  },
+  {
+    field: 'telefono',
+    headerName: 'Telefono',
+    // type: 'number',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'email',
+    headerName: 'Correo',
+    // type: 'number',
+    width: 150,
+    editable: true,
+  },
+
+  {
+    field: 'direccion',
+    headerName: 'Dirección',
+    // type: 'number',
+    width: 150,
     editable: true,
   },
   {
@@ -298,7 +348,7 @@ const columns = [
       icon={<DoneIcon />}
       label="Atender o Cerrar"
       disabled={activeButton(params.row.oficinas)}
-       onClick={() => { handleFin(params.row.id,params.row.oficinas) }}
+       onClick={() => { handleOpenClose(params.row.oficinas) }}
     />,
      
       // <GridActionsCellItem
@@ -342,6 +392,15 @@ if(!isLoading){
                         pageSize: 10,
                       },
                     },
+                    columns: {
+                      columnVisibilityModel: {
+                        telefono: false,
+                        dni: false,
+                        direccion: false,
+                        asunto: false,
+                      
+                      },
+                    },
                   }}
                   pageSizeOptions={[5]}
                   slots={{ toolbar: GridToolbar }}
@@ -354,6 +413,9 @@ if(!isLoading){
     </Paper>
       <ModalTracking open={open} handleClose={handleCloseTrack} oficinas={oficinas} /> 
       <ModalDerivar open={openDerivar} handleClose={handleCloseDerivar} documentoId={documentoId} oficinaOrigenId={oficinaOrigenId}/>
+      <ModalCerrar open={openClose} handleClose={handleCloseClose}oficina={oficinaAct}>
+
+      </ModalCerrar>
     </>
     
   )

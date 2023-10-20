@@ -44,7 +44,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function oficinas()
+    public function oficina()
     {
         return $this->belongsTo(Oficina::class);
     }

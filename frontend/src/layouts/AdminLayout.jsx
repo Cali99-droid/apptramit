@@ -26,7 +26,7 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useAuth } from '../hooks/useAuth';
-
+import { ToastContainer } from 'react-toastify';
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -99,7 +99,7 @@ export default function AdminLayout() {
   const {user, error,logout,oficina} = useAuth({middleware:'admin'});
  
   console.log(error)
-  console.log(user)
+
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -123,6 +123,7 @@ export default function AdminLayout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
+      <ToastContainer />
       <AppBar position="fixed" open={open}>
         <Box display={'flex'} justifyContent={'space-between'}>
         <Toolbar >

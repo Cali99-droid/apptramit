@@ -8,16 +8,21 @@ import {
 
 } from '@mui/material';
 import clienteAxios from '../config/axios';
+import { toast } from 'react-toastify';
 // eslint-disable-next-line react/prop-types
-const OfficeModal = ({ open, onClose }) => {
+const OfficeModal = ({ open, onClose}) => {
+
   const [officeName, setOfficeName] = useState('');
   const [error, setError] = useState('');
 
   const handleClose = () => {
+  
     setOfficeName('');
     setError('');
     onClose();
   };
+
+
 
   const handleSubmit = async() => {
     // Validar el nombre de la oficina 
@@ -27,6 +32,8 @@ const OfficeModal = ({ open, onClose }) => {
     } else {
       // Realizar acciones cuando el formulario se envíe con éxito
       try {
+       
+        
         await clienteAxios.post('/api/oficina',{
           officeName
         },{
@@ -34,13 +41,14 @@ const OfficeModal = ({ open, onClose }) => {
             Authorization: `Bearer ${token}`,
           },
         })
-        
+        handleClose();
+        toast.success('Creado Correctamente')
       } catch (error) {
         console.log(error)
       }
 
-      console.log('Nombre de la oficina:', officeName);
-      handleClose();
+     
+     
     }
   };
 

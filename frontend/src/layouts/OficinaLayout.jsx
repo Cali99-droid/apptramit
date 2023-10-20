@@ -23,6 +23,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 // import GroupIcon from '@mui/icons-material/Group';
 import { useAuth } from '../hooks/useAuth';
 import { useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -109,6 +110,7 @@ export default function OficinaLayout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
+      <ToastContainer />
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton

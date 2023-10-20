@@ -12,8 +12,8 @@ class Oficina extends Model
     {
         return $this->belongsToMany(Documento::class, 'histories');
     }
-    public function users()
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class);
     }
 }

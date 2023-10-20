@@ -1,7 +1,9 @@
 // DocumentRequestForm.js
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-
+import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import {
   TextField,
   Button,
@@ -14,8 +16,10 @@ import {
 } from '@mui/material';
 // import clienteAxios from '../config/axios';
 import axios from 'axios';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
-
+const MySwal = withReactContent(Swal);
 const validationSchema = yup.object().shape({
     personaType: yup.string().required('El tipo de persona es requerido'),
     direccion: yup.string().required('La dirección es requerida'),
@@ -52,12 +56,12 @@ const validationSchema = yup.object().shape({
   
 const SolicitudRequestForm = () => {
  
-  
+  const [code, setCode] = useState('');
   // const token = localStorage.getItem("AUTH_TOKEN");
     const formik = useFormik({
         initialValues,
         validationSchema,
-        onSubmit: async(values) => {
+        onSubmit: async(values,{resetForm}) => {
          
           const formData = new FormData();
           formData.append('asunto', values.asunto);
@@ -75,16 +79,29 @@ const SolicitudRequestForm = () => {
        console.log(formData)
           // Realizar acciones cuando el formulario se envíe con éxito
           try {
-            await axios.post('http://localhost/api/solicitud',
-              formData
-            ,{
-              headers: {
-                // Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
-              },
+            toast.info('Guardando')
+            const {data} =   await axios.post('http://localhost/api/solicitud',
+                    formData
+                  ,{
+                    headers: {
+                      // Authorization: `Bearer ${token}`,
+                      'Content-Type': 'multipart/form-data',
+                    },
+                  })
+            setCode(data.code)
+            console.log(code)
+            MySwal.fire({
+              title: 'Registro Exitoso!',
+              text: `Codigo de Seguimiento: ${data.code}`,
+             
             })
-            
+            resetForm();
           } catch (error) {
+            MySwal.fire({
+              title: 'Hubo un error',
+              text: `Contacte con el adminsitrador`,
+             
+            })
             console.log(error)
           }
 
@@ -223,23 +240,18 @@ const SolicitudRequestForm = () => {
             required
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel>Tipo de documento</InputLabel>
-            <Select
-              label="Tipo de documento"
-              name="documentType"
-              value={formik.values.documentType}
-              onChange={formik.handleChange}
-              error={formik.touched.documentType && Boolean(formik.errors.documentType)}
-              // helperText={formik.touched.documentType && formik.errors.documentType}
-              required
-            >
-              <MenuItem value="Tipo 1">Tipo 1</MenuItem>
-              <MenuItem value="Tipo 2">Tipo 2</MenuItem>
-              <MenuItem value="Tipo 3">Tipo 3</MenuItem>
-            </Select>
-          </FormControl>
+        <Grid item xs={12} sm={6}> 
+          <TextField
+            label="Tipo de documento(solicitud, carta, etc)"
+            fullWidth
+            variant="outlined"
+            name="documentType"
+            value={formik.values.documentType}
+            onChange={formik.handleChange}
+            error={formik.touched.documentType && Boolean(formik.errors.documentType)}
+            helperText={formik.touched.documentType && formik.errors.documentType}
+            required
+          /> 
         </Grid>
         <Grid item xs={12} sm={6}>
         <TextField
