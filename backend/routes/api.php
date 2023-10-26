@@ -30,11 +30,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/documento', DocumentoController::class);
     Route::apiResource('/history', HistoryController::class);
     // Route::apiResource('/history', HistoryController::class);
+    Route::post('/registro', [AuthController::class, 'register']);
 });
 
 
 // Autenticacion
-Route::post('/registro', [AuthController::class, 'register']);
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/solicitud', [DocumentoController::class, 'upload']);
 Route::get('/consulta/{code}', [DocumentoController::class, 'consulta']);

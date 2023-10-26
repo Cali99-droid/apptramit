@@ -22,8 +22,8 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import GroupIcon from '@mui/icons-material/Group';
 import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
+// import PersonAdd from '@mui/icons-material/PersonAdd';
+// import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useAuth } from '../hooks/useAuth';
 import { ToastContainer } from 'react-toastify';
@@ -172,7 +172,7 @@ export default function AdminLayout() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}></Avatar>
           </IconButton>
         </Tooltip>
         <Menu
@@ -211,13 +211,13 @@ export default function AdminLayout() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
+          <Avatar /> {user?.name}
         </MenuItem>
         <MenuItem onClick={handleClose}>
-          <Avatar /> My account
+          <Avatar /> {oficina?.nombre}
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        {/* <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
@@ -228,8 +228,8 @@ export default function AdminLayout() {
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
+        </MenuItem> */}
+        <MenuItem onClick={logout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

@@ -1,6 +1,6 @@
 import { Backdrop, Button, CircularProgress, FormControl, FormHelperText, Modal, Paper, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, esES } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { useState } from 'react';
@@ -94,8 +94,8 @@ const handleEdit = (id,nombre)=>{
     {
       field: 'nombre',
       headerName: 'Oficina',
-      width: 800,
-      editable: true,
+      width: 400,
+     
     },{
       field: 'actions', 
       headerName: 'Editar', 
@@ -120,6 +120,8 @@ const handleEdit = (id,nombre)=>{
   ];
   if(isLoading) return( <Backdrop
     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    open={true}
+  
   >
     <CircularProgress color="inherit" />
   </Backdrop>)
@@ -133,13 +135,14 @@ const handleEdit = (id,nombre)=>{
     </Paper>
     
     <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}}  elevation={1}>
-<Box sx={{ height: 400, width: '100%',bgcolor:grey[50] }} padding={4}>
+<Box sx={{ height: 500, width: 'auto',bgcolor:grey[50] }} padding={4}>
       <Box display={'flex'} justifyContent={'end'} >
       
         
 
       </Box>
     <DataGrid
+    localeText={esES.components.MuiDataGrid.defaultProps.localeText}
       rows={data.data}
       columns={columns}
       initialState={{
@@ -150,7 +153,7 @@ const handleEdit = (id,nombre)=>{
         },
       }}
      
-      pageSizeOptions={[5]}
+      pageSizeOptions={[10]}
       // checkboxSelection
       // disableRowSelectionOnClick
     />

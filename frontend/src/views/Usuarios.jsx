@@ -1,6 +1,6 @@
-import { Backdrop, Button, CircularProgress, Paper, Typography } from '@mui/material';
+import { Backdrop, Button, Chip, CircularProgress, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, esES } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import useSWR from 'swr'
@@ -9,50 +9,8 @@ import { useState } from 'react';
 import UserCreationModal from '../components/UserCreationModal';
 import { cyan, grey } from '@mui/material/colors';
 import clienteAxios from '../config/axios';
-const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'name',
-    headerName: 'Nombres',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'email',
-    headerName: 'Correo',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'oficina',
-    headerName: 'Oficina',
-    type: 'number',
-    width: 200,
 
-    valueGetter: (params) =>
-      params.row.oficina.nombre 
-  }
-  ,{
-    field: 'actions', 
-    headerName: 'Editar', 
-    sortable: false,
-    type: 'actions',
-    width: 110,  getActions: (params) => [
-      
-   
-      <GridActionsCellItem
-        sx={{ color: cyan[800] }}
-        key={params.row.id}
-        icon={<ModeEditIcon />}
-        label="Editar"
-        //  onClick={() => { handleEdit(params.row.id, params.row.nombre) }}
-      />
-   
-    ]
 
-  }
- 
-];
 
 // const rows = [
 //   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
@@ -66,14 +24,78 @@ const columns = [
 //   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 // ];
 export default function Usuarios() {
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    {
+      field: 'name',
+      headerName: 'Nombres',
+      width: 150,
+     
+    },
+    {
+      field: 'email',
+      headerName: 'Correo',
+      width: 150,
+      
+    },
+    {
+      field: 'oficina',
+      headerName: 'Oficina',
+      type: 'number',
+      width: 200,
+  
+      valueGetter: (params) =>
+        params.row.oficina.nombre 
+    },
+    {
+      field: 'status',
+      headerName: 'estado',
+      type: 'number',
+      width: 100,
+      renderCell: ({row}) => {
+        // console.log(row.oficinas)
+            if (row.status ===1) {
+              return (<Chip label={'Activo'} variant='outlined' color='success'/>);
+            }
+            if (row.status ===0) {
+              return (<Chip label={'Inactivo'}variant='outlined' color='error' />);
+            }   
+        }
+  
+    
+    }
+    ,{
+      field: 'actions', 
+      headerName: 'Editar', 
+      sortable: false,
+      type: 'actions',
+      width: 110,  getActions: (params) => [
+        
+     
+        <GridActionsCellItem
+          sx={{ color: cyan[800] }}
+          key={params.row.id}
+          icon={<ModeEditIcon />}
+          label="Editar"
+           onClick={() => { handleEdit(params.row.id,params.row.name,params.row.email, params.row.oficina.id,params.row.status) }}
+        />
+     
+      ]
+  
+    }
+   
+  ];
+
   const token = localStorage.getItem("AUTH_TOKEN");
   const [modalOpen, setModalOpen] = useState(false);
+
   const fetcher = () => clienteAxios('/api/users',{
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }).then(datos => datos.data)
   const { data,  isLoading } = useSWR('/api/users', fetcher, {refreshInterval: 10000})
+
 //error,
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -81,7 +103,46 @@ export default function Usuarios() {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+   
+    setUserData({});
+
   };
+
+  const [userData, setUserData] = useState({
+    id:null,
+    name: '',
+    email: '',
+    password: '',
+    office: '',
+    status:1,
+  });
+  const handleEdit = (id,nombre, email, office, status)=>{
+   console.log(status)
+   
+    setUserData({
+      ...userData,
+      ['id']: id, ['name']: nombre,['email']: email,['office']: office, ['status']: status,
+    });
+    // setUserData({
+    //   ...userData,
+    //   ['name']: nombre,
+    // });
+    // setUserData({
+    //   ...userData,
+    //   ['email']: email,
+    // });
+   
+    // setUserData({
+    //   ...userData,
+    //   ['office']: office,
+    // });
+    // setUserData({
+    //   ...userData,
+    //   ['status']: status,
+    // });
+    console.log(userData)
+    setModalOpen(true);
+  }
 
 
 
@@ -102,7 +163,7 @@ export default function Usuarios() {
         </Button>
     </Paper>
     <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}}  elevation={1}>
-       <Box sx={{ height: 400, width: '100%' }} padding={4}>
+       <Box sx={{ height: 500, width: '100%' }} padding={4}>
        {/* <Backdrop
   sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
   open={!isLoading}
@@ -111,23 +172,28 @@ export default function Usuarios() {
   <CircularProgress color="inherit" />
 </Backdrop> */}
     <DataGrid
+    localeText={esES.components.MuiDataGrid.defaultProps.localeText}
     loading={isLoading}
       rows={data.data}
       columns={columns}
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: 5,
+            pageSize: 10,
           },
         },
       }}
-      pageSizeOptions={[5]}
+      pageSizeOptions={[10]}
       // checkboxSelection
       // disableRowSelectionOnClick
     />
-     <UserCreationModal open={modalOpen} onClose={handleCloseModal} />
+     <UserCreationModal open={modalOpen} onClose={handleCloseModal} user={userData} />
+
+     {/* <UserEditModal open={modalOpenEdit} onClose={handleCloseModal} user={userData}/> */}
   </Box>
     </Paper>
+      
+
    
     </>
     

@@ -36,9 +36,22 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
         //
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->oficina_id = $request->office;
+        $user->status = $request->status;
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+        return [
+            'message' => 'Se actualizó correctamente',
+            'id' => $user->id,
+
+        ];
     }
 
     /**

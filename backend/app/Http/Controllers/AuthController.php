@@ -23,14 +23,16 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'oficina_id' => $data['office']
+            'oficina_id' => $data['office'],
+
         ]);
 
 
         // Retornar una respuesta
         return [
             'token' => $user->createToken('token')->plainTextToken,
-            'user' => $user
+            'user' => $user,
+            'status' => $data
         ];
     }
 
@@ -48,6 +50,11 @@ class AuthController extends Controller
 
         // Autenticar al usuario
         $user = Auth::user();
+        if ($user->status === 0) {
+            return response([
+                'errors' => ['Usuario no activo']
+            ], 422);
+        }
         return [
             'token' => $user->createToken('token')->plainTextToken,
             'user' => $user

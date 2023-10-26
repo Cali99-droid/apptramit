@@ -55,7 +55,8 @@ class DocumentoController extends Controller
         $pdfFile = $request->file('pdfFile');
 
         // Generar un nombre único para el archivo
-        $uniqueName = 'EXP' . '_' . time() . $pdfFile->getClientOriginalName();
+        // $uniqueName = 'EXP' . '_' . time() . $pdfFile->getClientOriginalName();
+        $uniqueName = 'EXP' . '_' . time();
         $documento->dir = $uniqueName;
         // Guardar el archivo en el directorio de almacenamiento
         $pdfFile->storeAs('pdfs', $uniqueName);

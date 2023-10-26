@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Button, Chip,  Link, Paper, Typography } from '@mui/material';
+import { Backdrop, Button, Chip,  CircularProgress,  Link, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid, GridActionsCellItem, GridToolbar, esES } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -231,40 +231,40 @@ const columns = [
     field: 'tipo',
     headerName: 'Tipo',
     width: 100,
-    editable: true,
+   
   },
   {
     field: 'folios',
     headerName: 'N° Folios',
     width: 100,
-    editable: true,
+  
   },
   {
     field: 'dni',
     headerName: 'DNI',
     width: 100,
-    editable: true,
+   
   },
   {
     field: 'nombre_interesado',
     headerName: 'Nombre',
     // type: 'number',
     width: 250,
-    editable: true,
+   
   },
   {
     field: 'telefono',
     headerName: 'Telefono',
     // type: 'number',
     width: 150,
-    editable: true,
+   
   },
   {
     field: 'email',
     headerName: 'Correo',
     // type: 'number',
     width: 150,
-    editable: true,
+
   },
 
   {
@@ -272,7 +272,7 @@ const columns = [
     headerName: 'Dirección',
     // type: 'number',
     width: 150,
-    editable: true,
+   
   },
   {
     field: 'tipo_persona',
@@ -370,6 +370,14 @@ if(!isLoading){
    rows = user?.oficina_id === 1 ? data.data : isAnother(data?.data);
 }
 
+if(isLoading) return( <Backdrop
+  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+  open={true}
+
+>
+  <CircularProgress color="inherit" />
+</Backdrop>)
+
   return (
     <>
     <Paper elevation={1} sx={{display:'flex', justifyContent:'space-between', padding:2,marginBottom:2, bgcolor:grey[200]}}>
@@ -379,8 +387,8 @@ if(!isLoading){
          Nuevo
         </Button>
     </Paper>
-    <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}}  elevation={1}>
-            <Box sx={{ height: 500, width: '100%' }} padding={4}>
+    <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}} width={'50%'} elevation={1}>
+            <Box sx={{ height: 500, maxWidth: 1400 }} padding={2}>
             {!isLoading &&(
               <DataGrid
               localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -398,7 +406,8 @@ if(!isLoading){
                         dni: false,
                         direccion: false,
                         asunto: false,
-                      
+                        folios:false,
+                        email:false
                       },
                     },
                   }}
