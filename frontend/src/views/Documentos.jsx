@@ -25,7 +25,7 @@ dayjs.locale('es')
 const download = async(docName)=>{
   // const token = localStorage.getItem("AUTH_TOKEN");
   try {
-    const downloadUrl = `http://apil.solware-pyme.com/api/download/${docName}`;
+    const downloadUrl = `https://apil.solware-pyme.com/api/download/${docName}`;
        // Abre el enlace en una nueva ventana o pestaña
        window.open(downloadUrl, '_blank');
   } catch (error) {

@@ -33,7 +33,7 @@ const onCodeChange = (event) => {
    
     try {
       toast.info('Procesando')
-      const {data} =   await axios.get(`http://apil.solware-pyme.com/api/consulta/${code}`)
+      const {data} =   await axios.get(`https://apil.solware-pyme.com/api/consulta/${code}`)
       console.log(data.data[0].oficinas)
      if(data.data.length===0){
       
