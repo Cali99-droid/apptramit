@@ -10,7 +10,7 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import DoneIcon from '@mui/icons-material/Done';
 import useSWR from 'swr';
 import clienteAxios from '../config/axios';
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import 'dayjs/locale/es' // load on demand
 import ModalTracking from '../components/modal/ModalTracking';
 import { useState } from 'react';
