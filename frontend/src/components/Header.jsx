@@ -10,7 +10,7 @@ import { useAuth } from "../hooks/useAuth";
 // const pages = ['consulta', 'solicitud'];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const Header = () => {
-  const {user} = useAuth({middleware:'auth'});
+  const {user} = useAuth({middleware:''});
     const [anchorElNav, setAnchorElNav] = useState(null);
   // const [anchorElUser, setAnchorElUser] = useState(null);
 
