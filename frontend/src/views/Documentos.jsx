@@ -387,8 +387,8 @@ if(isLoading) return( <Backdrop
          Nuevo
         </Button>
     </Paper>
-    <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}} width={'50%'} elevation={1}>
-            <Box sx={{ height: 500, maxWidth: 1400 }} padding={2}>
+    <Paper sx={{display:'flex', justifyContent:'center', alignItems:'center',bgcolor:grey[100]}} width={'100%'} elevation={1}>
+            <Box sx={{ height: 500, maxWidth: { xs: 200, md: 1400 }}} padding={2}>
             {!isLoading &&(
               <DataGrid
               localeText={esES.components.MuiDataGrid.defaultProps.localeText}

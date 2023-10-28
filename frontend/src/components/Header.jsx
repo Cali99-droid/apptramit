@@ -5,11 +5,14 @@ import { useState } from 'react';
 
 import AdbIcon from '@mui/icons-material/Adb';
 import LoginIcon from '@mui/icons-material/Login';
-const pages = [];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { useAuth } from "../hooks/useAuth";
+// const pages = ['consulta', 'solicitud'];
+// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const Header = () => {
+  const {user} = useAuth({middleware:'auth'});
     const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
+  // const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -22,9 +25,9 @@ const Header = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  // const handleCloseUserMenu = () => {
+  //   setAnchorElUser(null);
+  // };
 
   return (
     <AppBar position="static">
@@ -48,8 +51,8 @@ const Header = () => {
           >
             SISTRA
           </Typography>
-         <Box display={'flex'} gap={2}>
-         <Link to={'/consulta'}>
+         <Box display={'flex'} gap={2}sx={ {display: { xs: 'none', md: 'flex' }}}>
+         <Link to={'/consulta'} >
                 <Button variant='text'  color="inherit"  >
                     Consulta
                 </Button>
@@ -90,11 +93,24 @@ const Header = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+            
+                <MenuItem  onClick={handleCloseNavMenu} >
+                <Link to={'/consulta'} >
+                <Button variant='text'  color="inherit"  >
+                    Consulta
+                </Button>
+                </Link>
+               
                 </MenuItem>
-              ))}
+                <MenuItem>
+                <Link to={'/solicitud'}>
+                <Button variant='text'  color="inherit"  >
+                    Solicitud de trámite
+                    
+                </Button>
+                </Link>
+                </MenuItem>
+            
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -117,7 +133,7 @@ const Header = () => {
             SISTRA
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+          {/*   {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -125,8 +141,8 @@ const Header = () => {
               >
                 {page}
               </Button>
-            ))}
-          </Box>
+            ))}*/}
+          </Box> 
 
           <Box sx={{ flexGrow: 0 }}>
             
@@ -134,14 +150,22 @@ const Header = () => {
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton> </Tooltip>*/}
                
+            {user?(
+            <Link to={'/auth/login'}>
+            <Button variant='text' color="inherit" endIcon={<DashboardIcon/>}>Oficina </Button>
+            </Link>
             
-                <Link to={'/auth/login'}>
+            ):(
+                    <Link to={'/auth/login'}>
+                  
                 <Button variant='text' color="inherit" endIcon={<LoginIcon/>} >
                     Acceder
-                    
+                   
                 </Button>
                 </Link>
-            <Menu
+                  )}
+                
+            {/* <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
@@ -162,7 +186,7 @@ const Header = () => {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
-            </Menu>
+            </Menu> */}
           </Box>
         </Toolbar>
       </Container>
