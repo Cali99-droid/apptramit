@@ -31,7 +31,6 @@ export const useAuth = ({ middleware, url }) => {
       localStorage.setItem("AUTH_TOKEN", data.token);
       setErrores([]);
       await mutate();
-      setLoading(false);
     } catch (error) {
       setErrores(Object.values(error.response.data.errors));
       setLoading(false);
@@ -50,7 +49,7 @@ export const useAuth = ({ middleware, url }) => {
   };
 
   const logout = async () => {
-    console.log("saliendo");
+    console.log("out");
     try {
       await clienteAxios.post("/api/logout", null, {
         headers: {
@@ -59,6 +58,7 @@ export const useAuth = ({ middleware, url }) => {
       });
       localStorage.removeItem("AUTH_TOKEN");
       await mutate(undefined);
+      window.location.reload();
     } catch (error) {
       throw Error(error?.response?.data?.errors);
     }
