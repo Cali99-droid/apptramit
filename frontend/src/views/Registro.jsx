@@ -15,7 +15,8 @@ export default function Registro() {
         Al finalizar el envio el sistema le asignará un codigo para que pueda dar seguimiento a su documento <strong>copie</strong> el codigo y guárdelo en un lugar seguro
       </Alert>
       <br />
-        <SolicitudRequestForm />
+   <SolicitudRequestForm />
+        
        </Box>
       </Container>
   )

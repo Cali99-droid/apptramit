@@ -3,6 +3,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import Swal from 'sweetalert2'
 // import Swal from 'sweetalert2'
+import ReCAPTCHA from "react-google-recaptcha";
 import withReactContent from 'sweetalert2-react-content'
 import {
   TextField,
@@ -24,8 +25,8 @@ const validationSchema = yup.object().shape({
     personaType: yup.string().required('El tipo de persona es requerido'),
     direccion: yup.string().required('La dirección es requerida'),
     asunto: yup.string().required('El asunto es requerido'),
-    email: yup.string().required('El email  es requerido'),
-    telefono: yup.string().required('El teléfono o celular es requerido'),
+    email: yup.string().email('Debe ser un email válido').required('El email  es requerido'),
+    telefono: yup.string().length(9, 'El telefono debe ser de 9 digitos').required('El teléfono o celular es requerido'),
     // office: yup.string().required('La oficina es requerida'),
     name: yup.string().required('El nombre del interesado es requerido'),
     dni: yup.string().required('El DNI del interesado es requerido'),
@@ -57,6 +58,7 @@ const validationSchema = yup.object().shape({
 const SolicitudRequestForm = () => {
  
   const [code, setCode] = useState('');
+  const [captcha, setCaptcha] = useState('');
   // const token = localStorage.getItem("AUTH_TOKEN");
     const formik = useFormik({
         initialValues,
@@ -76,9 +78,14 @@ const SolicitudRequestForm = () => {
           formData.append('documentType', values.documentType);
           formData.append('pdfFile', values.pdfFile);
           formData.append('otro', 'otrororo');
-       console.log(formData)
+
           // Realizar acciones cuando el formulario se envíe con éxito
           try {
+            if(!captcha){
+              toast.warning('Marca la casilla para comprobar que no eres un robot')
+              return
+            }
+            formData.append('captcha', captcha);
             toast.info('Guardando')
             const {data} =   await axios.post('https://apil.solware-pyme.com/api/solicitud',
                     formData
@@ -90,25 +97,36 @@ const SolicitudRequestForm = () => {
                   })
             setCode(data.code)
             console.log(code)
+            console.log(data)
             MySwal.fire({
+              icon:'success',
               title: 'Registro Exitoso!',
               text: `Codigo de Seguimiento: ${data.code}`,
              
+            }).then(()=>{0
+              resetForm();
+              window.location.reload(true);
+
             })
-            resetForm();
+           
           } catch (error) {
             MySwal.fire({
-              title: 'Hubo un error',
-              text: `Contacte con el adminsitrador`,
+              icon:'error',
+              title: 'Hubo un error ',
+              text: `${error.response.data.message}`,
              
             })
-            console.log(error)
+            console.log(error.response.data.message)
           }
 
           // console.log('Formulario enviado con éxito:', values);
         },
       });
    
+  const handleRecaptchaChange = (value) => {
+   
+   setCaptcha(value);
+  }
   return (
     <form onSubmit={formik.handleSubmit} noValidate encType="multipart/form-data">
       <Grid container spacing={2}>
@@ -287,6 +305,12 @@ const SolicitudRequestForm = () => {
                 required
             />
             </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+        <ReCAPTCHA
+          sitekey="6LcpWf4oAAAAACNgA6kHAO6LV31f9H1EFCHV5gzW"
+          onChange={handleRecaptchaChange}
+        />
         </Grid>
         <Grid item xs={12}>
           <Button
