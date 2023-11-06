@@ -33,7 +33,7 @@ class DocumentoController extends Controller
     }
     public function upload(Request $request)
     {
-        //
+        //cambiso
         $request->validate([
             'name' => 'required|string',
             'pdfFile' => 'required|file|mimes:pdf|max:10240', // Validación del archivo PDF
