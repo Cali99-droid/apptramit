@@ -34,57 +34,7 @@ class DocumentoController extends Controller
     public function upload(Request $request)
     {
         //cambiso
-        $request->validate([
-            'name' => 'required|string',
-            'pdfFile' => 'required|file|mimes:pdf|max:10240', // Validación del archivo PDF
-        ]);
-        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY');
-        $recaptchaResponse = $request->input('captcha');
-        $recaptcha = new \ReCaptcha\ReCaptcha($recaptchaSecret);
-        $response = $recaptcha->verify($recaptchaResponse);
-        if ($response->isSuccess()) {
-            $documento = new Documento();
-            $documento->tipo_persona = $request->input('personaType');
-            $documento->dni = $request->input('dni');
-            $documento->nombre_interesado = $request->input('name');
-            $documento->telefono = $request->input('telefono');
-            $documento->email = $request->input('email');
-            $documento->direccion = $request->input('direccion');
-            $documento->nombre_documento = $request->input('documentName');
-            $documento->tipo = $request->input('documentType');
-            $documento->folios = $request->input('folio');
-            $documento->asunto = $request->input('asunto');
-            $documento->estado_id = 1;
-            $documento->code = Str::upper(Str::random(6));
 
-            $pdfFile = $request->file('pdfFile');
-
-            // Generar un nombre único para el archivo
-            // $uniqueName = 'EXP' . '_' . time() . $pdfFile->getClientOriginalName();
-            $uniqueName = 'EXP' . '_' . time();
-            $documento->dir = $uniqueName;
-            // Guardar el archivo en el directorio de almacenamiento
-            $pdfFile->storeAs('pdfs', $uniqueName);
-            //guradar documento
-            $documento->save();
-
-            //obtener id del documento
-            // Obtener el ID del pedido
-            $id =   $documento->id;
-            //guardar historial
-            $history = new History();
-            $history->oficina_id = 1;
-            $history->documento_id = $id;
-            $history->estado_id = 1;
-            $history->save();
-
-            return [
-                'code' => $documento->code,
-
-            ];
-        } else {
-            abort(404, 'Captcha no válido, por favor, inténtalo de nuevo.');
-        }
     }
 
     /**
