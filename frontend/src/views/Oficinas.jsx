@@ -10,10 +10,13 @@ import { cyan, grey } from '@mui/material/colors';
 import clienteAxios from '../config/axios';
 import useSWR from 'swr';
 import { toast } from 'react-toastify';
+import { useAuth } from '../hooks/useAuth';
 
 
 
 export default function Oficinas() {
+  const {user} = useAuth({middleware:'auth'});
+  console.log(user)
   const token = localStorage.getItem("AUTH_TOKEN");
   const fetcher = () => clienteAxios('/api/oficina',{
     headers: {

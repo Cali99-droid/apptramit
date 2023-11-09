@@ -9,6 +9,7 @@ import { useState } from 'react';
 import UserCreationModal from '../components/UserCreationModal';
 import { cyan, grey } from '@mui/material/colors';
 import clienteAxios from '../config/axios';
+import { useAuth } from '../hooks/useAuth';
 
 
 
@@ -24,6 +25,8 @@ import clienteAxios from '../config/axios';
 //   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 // ];
 export default function Usuarios() {
+  const {user} = useAuth({middleware:'admin'});
+  console.log(user)
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
