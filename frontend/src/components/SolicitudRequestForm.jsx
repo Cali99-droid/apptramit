@@ -14,11 +14,14 @@ import {
   MenuItem,
   Grid,
   Input,
+  CircularProgress,
 } from '@mui/material';
 // import clienteAxios from '../config/axios';
 import axios from 'axios';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import ModalMensaje from './modal/ModalMensaje';
+import { green } from '@mui/material/colors';
 
 const MySwal = withReactContent(Swal);
 const validationSchema = yup.object().shape({
@@ -59,6 +62,12 @@ const SolicitudRequestForm = () => {
  
   const [code, setCode] = useState('');
   const [captcha, setCaptcha] = useState('');
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState(false);
+const handleClose= ()=>{
+  setOpen(false);
+}
+const [loading, setLoading] = useState(false);
   // const token = localStorage.getItem("AUTH_TOKEN");
     const formik = useFormik({
         initialValues,
@@ -77,7 +86,7 @@ const SolicitudRequestForm = () => {
           formData.append('folio', values.folio);
           formData.append('documentType', values.documentType);
           formData.append('pdfFile', values.pdfFile);
-          formData.append('otro', 'otrororo');
+        
 
           // Realizar acciones cuando el formulario se envíe con éxito
           try {
@@ -86,7 +95,8 @@ const SolicitudRequestForm = () => {
               return
             }
             formData.append('captcha', captcha);
-            toast.info('Guardando')
+            // toast.info('Guardando')
+            setLoading(true)
             const {data} =   await axios.post('https://apil.solware-pyme.com/api/solicitud',
                     formData
                   ,{
@@ -97,17 +107,47 @@ const SolicitudRequestForm = () => {
                   })
             setCode(data.code)
             console.log(code)
-            console.log(data)
-            MySwal.fire({
-              icon:'success',
-              title: 'Registro Exitoso!',
-              text: `Codigo de Seguimiento: ${data.code}`,
+            console.log(data) 
+            setName(values.name)
+            setOpen(true)
+            resetForm();
+           setLoading(false)
+          //   MySwal.fire({
+          //     icon:'success',
+          //     title: 'Registro Exitoso!',
+            
+          //     html: `
+          //           Estimado <b>${values.name}</b>,
+          //           su solicitud esta en proceso de atención,
+          //           el codigo de seguimiento es: <b>${data.code}</b> y
+          //           puede consultarlo desde  <a href="http://127.0.0.1:5173/consulta">aqui</a>
+          //     `,
+          //     footer: '<a href="#">Sistema de trámite documentario - Municipalidad de Chaccho?</a>',
+          //     showCloseButton: true,
+          //     showCancelButton: true,
+          //     focusConfirm: false,
+          //     confirmButtonText: `
+          //  Aceptar!
+          //     `,
+          //     confirmButtonAriaLabel: "Thumbs up, great!",
+          //     cancelButtonText: `
+          //       Imprimir Cargo
+          //     `,
+          //     cancelButtonAriaLabel: "Cargo"
              
-            }).then(()=>{0
-              resetForm();
-              window.location.reload(true);
+          //   }).then((result)=>{
+          //     // if (result.isConfirmed) {
+          //     //   handlePrint()
+          //     //   // resetForm();
+          //     //   // window.location.reload(true);
+          //     // } else if (result.isDenied) {
+          //     //   console.log('impr')
+          //     //   handlePrint()
+          //     //   // Swal.fire("Changes are not saved", "", "info");
+          //     // }
+            
 
-            })
+          //   })
            
           } catch (error) {
             MySwal.fire({
@@ -116,6 +156,7 @@ const SolicitudRequestForm = () => {
               text: `${error.response.data.message}`,
              
             })
+            setLoading(false)
             console.log(error.response.data.message)
           }
 
@@ -318,11 +359,28 @@ const SolicitudRequestForm = () => {
             variant="contained"
             color="primary"
             fullWidth
+            disabled={loading}
           >
             Enviar Solicitud
+            {loading && (
+                                        <CircularProgress
+                                            size={24}
+                                            sx={{
+                                                color: green[500],
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                marginTop: '-12px',
+                                                marginLeft: '-12px',
+                                            }}
+                                        />
+                                    )}
           </Button>
         </Grid>
       </Grid>
+      <ModalMensaje open={open} handleClose={handleClose}name={name} code={code}>
+
+      </ModalMensaje>
     </form>
   );
 };
