@@ -25,7 +25,7 @@ import { useAuth } from '../hooks/useAuth';
 //   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 // ];
 export default function Usuarios() {
-  const {user} = useAuth({middleware:'admin'});
+  const {user} = useAuth({middleware:'auth'});
   console.log(user)
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -177,7 +177,7 @@ export default function Usuarios() {
     <DataGrid
     localeText={esES.components.MuiDataGrid.defaultProps.localeText}
     loading={isLoading}
-      rows={data.data}
+      rows={data?.data}
       columns={columns}
       initialState={{
         pagination: {
