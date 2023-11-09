@@ -58,6 +58,7 @@ export const useAuth = ({ middleware, url }) => {
       });
       localStorage.removeItem("AUTH_TOKEN");
       await mutate(undefined);
+      navigate("/");
       window.location.reload();
     } catch (error) {
       throw Error(error?.response?.data?.errors);
