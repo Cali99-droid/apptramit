@@ -45,7 +45,7 @@ export default function Documentos() {
       Authorization: `Bearer ${token}`,
     },
   }).then(datos => datos?.data)
-  const { data,isLoading } = useSWR('/api/documento', fetcher, {refreshInterval: 10000})
+  const { data,isLoading } = useSWR('/api/documento', fetcher, {refreshInterval: 1000})
 console.log(data)
   // if(!isLoading){
   //   const rows = data.data.filter(doc=>{

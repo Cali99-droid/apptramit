@@ -97,7 +97,7 @@ export default function Usuarios() {
       Authorization: `Bearer ${token}`,
     },
   }).then(datos => datos.data)
-  const { data,  isLoading } = useSWR('/api/users', fetcher, {refreshInterval: 10000})
+  const { data,  isLoading } = useSWR('/api/users', fetcher, {refreshInterval: 1000})
 
 //error,
   const handleOpenModal = () => {

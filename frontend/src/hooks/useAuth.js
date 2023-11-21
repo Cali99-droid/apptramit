@@ -11,16 +11,19 @@ export const useAuth = ({ middleware, url }) => {
     data: data,
     error,
     mutate,
-  } = useSWR("/api/user", () =>
-    clienteAxios("/api/user", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.data)
-      .catch((error) => {
-        throw Error(error?.response?.data?.errors);
+  } = useSWR(
+    "/api/user",
+    () =>
+      clienteAxios("/api/user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
+        .then((res) => res.data)
+        .catch((error) => {
+          throw Error(error?.response?.data?.errors);
+        }),
+    { refreshInterval: 1000 }
   );
   const user = data?.user;
   const oficina = data?.oficina;
