@@ -23,7 +23,7 @@ const ModalMensaje = ({handleClose,open,name,code}) => {
   return (
     <Dialog open={open} onClose={handleClose} >
 
-            <DialogTitle>Código de Formulario: {code}</DialogTitle>
+            <DialogTitle>Código de Formulario: {new Date().getFullYear()}-{code}</DialogTitle>
             <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -58,7 +58,7 @@ const ModalMensaje = ({handleClose,open,name,code}) => {
         <Box mt={2}>
         <Typography fontSize={16}> Estimado  <b>{name}</b>,
                     su solicitud esta en proceso de atención,
-                    el código de seguimiento es: <b>{code}.</b>
+                    el código de seguimiento es: <b>{new Date().getFullYear()}-{code}.</b>
             </Typography>
             <Typography fontSize={16} mt={1}> Guarde el documento o copie el codigo, para su posterior seguimiento en el sistema.
             </Typography>
