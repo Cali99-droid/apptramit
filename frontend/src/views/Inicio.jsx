@@ -8,6 +8,7 @@ import withReactContent from 'sweetalert2-react-content'
 import ModalTracking from "../components/modal/ModalTracking";
 const MySwal = withReactContent(Swal);
 export default function Inicio() {
+  const api = import.meta.env.VITE_API_URL;
   const [oficinas, setOficinas] = useState([])
   const [open, setOpen] = useState(false);
 const handleCloseTrack = ()=>{
@@ -32,10 +33,11 @@ const onCodeChange = (event) => {
     }
    
     try {
+    
       toast.info('Procesando')
-      const {data} =   await axios.get(`https://apil.solware-pyme.com/api/consulta/${code}`)
-      console.log(data.data[0].oficinas)
-     if(data.data.length===0){
+      const {data} =   await axios.get(`${api}/api/consulta/${code}`)
+      
+     if(data.data.length<=0){
       
       MySwal.fire({
         title: 'No existen registros para el código ingresado',

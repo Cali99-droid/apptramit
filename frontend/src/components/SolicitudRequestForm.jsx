@@ -59,7 +59,7 @@ const validationSchema = yup.object().shape({
   };
   
 const SolicitudRequestForm = () => {
- 
+  const api = import.meta.env.VITE_API_URL;
   const [code, setCode] = useState('');
   const [captcha, setCaptcha] = useState('');
   const [open, setOpen] = useState(false);
@@ -97,7 +97,7 @@ const [loading, setLoading] = useState(false);
             formData.append('captcha', captcha);
             // toast.info('Guardando')
             setLoading(true)
-            const {data} =   await axios.post('https://apil.solware-pyme.com/api/solicitud',
+            const {data} =   await axios.post(`${api}/api/solicitud`,
                     formData
                   ,{
                     headers: {

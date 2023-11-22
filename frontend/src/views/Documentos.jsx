@@ -19,13 +19,13 @@ import { useAuth } from '../hooks/useAuth';
 // import Swal from 'sweetalert2'
 // import withReactContent from 'sweetalert2-react-content'
 import ModalCerrar from '../components/modal/ModalCerrar';
-
+const api = import.meta.env.VITE_API_URL;
 dayjs.locale('es') 
 // const MySwal = withReactContent(Swal);
 const download = async(docName)=>{
   // const token = localStorage.getItem("AUTH_TOKEN");
   try {
-    const downloadUrl = `https://apil.solware-pyme.com/api/download/${docName}`;
+    const downloadUrl = `${api}/api/download/${docName}`;
        // Abre el enlace en una nueva ventana o pestaña
        window.open(downloadUrl, '_blank');
   } catch (error) {
@@ -80,7 +80,7 @@ const handleCloseDerivar = ()=>{
 
 const [oficinas, setOficinas] = useState([])
 const handleOpenTracking = (oficinas )=>{
-console.log(oficinas)
+
 setOficinas(oficinas)
 setOpen(true)
 }
@@ -121,7 +121,7 @@ const handleOpenClose =(oficinas)=>{
   const oficinaAct = [...oficinas].pop();
   setOficinaAct(oficinaAct)
   setOpenClose(true)
-  console.log(oficinaAct)
+
 
 }
 
