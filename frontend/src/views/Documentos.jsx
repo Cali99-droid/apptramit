@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Backdrop, Button, Chip,  CircularProgress,  Link, Paper, Typography } from '@mui/material';
+import { Backdrop, Button, Card, CardContent, Chip,  CircularProgress,  Link, Paper, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid, GridActionsCellItem, GridToolbar, esES } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -13,7 +13,7 @@ import clienteAxios from '../config/axios';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es' // load on demand
 import ModalTracking from '../components/modal/ModalTracking';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModalDerivar from '../components/modal/ModalDerivar';
 import { useAuth } from '../hooks/useAuth';
 // import Swal from 'sweetalert2'
@@ -45,8 +45,8 @@ export default function Documentos() {
       Authorization: `Bearer ${token}`,
     },
   }).then(datos => datos?.data)
-  const { data,isLoading } = useSWR('/api/documento', fetcher, {refreshInterval: 1000})
-console.log(data)
+  const { data,isLoading } = useSWR('/api/documento', fetcher, {refreshInterval: 60000})
+
   // if(!isLoading){
   //   const rows = data.data.filter(doc=>{
   //    const res= doc.oficinas.filter(ofi=>ofi.id === user?.oficina_id);
@@ -112,7 +112,7 @@ const CustomChip = ({oficinas})=>{
 
 const [openClose, setOpenClose] = useState(false);
 const [oficinaAct, setOficinaAct] = useState({})
-console.log(oficinaAct)
+
 const handleCloseClose = ()=>{
   setOpenClose(false)
 
@@ -365,6 +365,21 @@ const columns = [
 
   }
 ];
+
+const [contador, setContador] = useState(60);
+
+    useEffect(() => {
+        if (contador >= 0) {
+            const temporizador = setTimeout(() => {
+                setContador(contador - 1);
+            }, 1000);
+            return () => clearTimeout(temporizador);
+        }else{
+          setContador(60)
+        }
+    }, [contador])
+
+
 let rows = [];
 if(!isLoading){
    rows = user?.oficina_id === 1 ? data.data : isAnother(data?.data);
@@ -380,6 +395,18 @@ if(isLoading) return( <Backdrop
 
   return (
     <>
+    <Box mb={2}>
+      <Card>
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          Actualizando en {contador} segundos
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Los documentos enviados a la oficina se actualizarán cada 60 segundos
+        </Typography>
+      </CardContent>
+      </Card>
+    </Box>
     <Paper elevation={1} sx={{display:'flex', justifyContent:'space-between', padding:2,marginBottom:2, bgcolor:grey[200]}}>
     <Typography variant='h6'>Lista de Documentos</Typography>
     <Button startIcon={<AddCircleIcon/>} component={Link}

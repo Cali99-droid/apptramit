@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Oficina extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'nombre',
+
+    ];
     public function documentos()
     {
         return $this->belongsToMany(Documento::class, 'histories');

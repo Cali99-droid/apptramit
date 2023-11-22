@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import {  Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField} from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clienteAxios from "../../config/axios";
-import useSWR from "swr";
+// import useSWR from "swr";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
 import { useAuth } from "../../hooks/useAuth";
@@ -14,13 +14,23 @@ const ModalDerivar = ({handleClose,open,documentoId, oficinaOrigenId}) => {
     const origenId = oficinaOrigenId?.id;
     const {user} = useAuth({middleware:'auth'});
     const token = localStorage.getItem("AUTH_TOKEN");
-    const fetcher = () => clienteAxios('/api/oficina',{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(datos => datos.data)
-    const { data,isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
-
+    // const fetcher = () => clienteAxios('/api/oficina',{
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // }).then(datos => datos.data)
+    // const { data,isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
+    const [datos, setDatos] = useState([]);
+    useEffect(() => {
+      clienteAxios('/api/oficina',{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((response) => {
+        setDatos(response.data.data);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [error, setError] = useState('');
     const [oficinaId, setOficinaId] = useState(0);
     const handleChange = (event) => {
@@ -76,10 +86,8 @@ const ModalDerivar = ({handleClose,open,documentoId, oficinaOrigenId}) => {
             <DialogContent  >
              <Box width={400} mt={1}>
              
-             {
-                isLoading?(
-                    <p>cargando..</p>
-                ):(
+           
+                
                 
                 <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Oficina</InputLabel>
@@ -92,7 +100,7 @@ const ModalDerivar = ({handleClose,open,documentoId, oficinaOrigenId}) => {
                             error={error}
                         >
                             <MenuItem  value={0}>--Seleccione--</MenuItem>
-                            {data?.data.map(e=>(
+                            {datos.map(e=>(
                             <MenuItem key={e.id} value={e.id} disabled={user?.oficina_id===e.id}>{e.nombre}</MenuItem>
                             )
                                 
@@ -102,8 +110,8 @@ const ModalDerivar = ({handleClose,open,documentoId, oficinaOrigenId}) => {
                         </Select>
                         <FormHelperText error>{error}</FormHelperText>
                 </FormControl>
-                )
-              }  
+               
+             
              <FormControl fullWidth sx={{ mt: 2 }}>
                  <TextField
                 id="filled-multiline-flexible"

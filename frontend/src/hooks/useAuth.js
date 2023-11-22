@@ -23,7 +23,7 @@ export const useAuth = ({ middleware, url }) => {
         .catch((error) => {
           throw Error(error?.response?.data?.errors);
         }),
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   );
   const user = data?.user;
   const oficina = data?.oficina;

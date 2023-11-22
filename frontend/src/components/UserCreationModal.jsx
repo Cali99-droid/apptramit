@@ -12,7 +12,7 @@ import {
   FormHelperText,
 } from '@mui/material';
 import clienteAxios from '../config/axios';
-import useSWR from 'swr'; 
+// import useSWR from 'swr'; 
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 
@@ -20,13 +20,23 @@ import { toast } from 'react-toastify';
 const UserCreationModal = ({ open, onClose,user }) => {
 
   const token = localStorage.getItem("AUTH_TOKEN");
-  const fetcher = () => clienteAxios('/api/oficina',{
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).then(datos => datos.data)
-  const { data, isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 10000})
-
+  // const fetcher = () => clienteAxios('/api/oficina',{
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // }).then(datos => datos.data)
+  // const { data, isLoading } = useSWR('/api/oficina', fetcher, {refreshInterval: 5000})
+  const [datos, setDatos] = useState([]);
+  useEffect(() => {
+    clienteAxios('/api/oficina',{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      setDatos(response.data.data);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [userData, setUserData] = useState({
     id:null,
@@ -97,8 +107,9 @@ const UserCreationModal = ({ open, onClose,user }) => {
        
       // Realizar acciones cuando el formulario se envíe con éxito
       console.log('Datos del usuario:', userData);
+      console.log(userData.id);
       try {
-        if(userData.id !==null){
+        if(userData.id){
           const resp = await clienteAxios.put(`/api/users/${userData.id}`,userData,{
             headers: {
               Authorization: `Bearer ${token}`,
@@ -184,10 +195,10 @@ const UserCreationModal = ({ open, onClose,user }) => {
             // value={userData.office}
            value={userData.office}
             onChange={handleChange}
-            disabled={isLoading}
+            disabled={datos.length<=0}
             defaultValue={user.office}
           >
-            {data?.data.map((office,index) => (
+            {datos.map((office,index) => (
               <MenuItem key={index} value={office.id}>
                 {office.nombre}
               </MenuItem>

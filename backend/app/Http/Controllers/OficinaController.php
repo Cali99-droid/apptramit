@@ -23,11 +23,16 @@ class OficinaController extends Controller
     public function store(Request $request)
     {
         //
-        $oficina = new Oficina;
-        $oficina->nombre = $request->officeName;
-        $oficina->save();
+        $oficina = Oficina::create([
+            'nombre' => $request->officeName
+
+        ]);
+
+
         return [
-            'message' => 'un mensaje post'
+
+            'oficina' =>  $oficina
+
         ];
     }
 
@@ -45,10 +50,12 @@ class OficinaController extends Controller
     public function update(Request $request, Oficina $oficina)
     {
         //
+
         $oficina->nombre = $request->officeName;
         $oficina->save();
         return [
-            'message' => 'Se guardo correctamente'
+            'message' => 'Se guardo correctamente',
+            'oficina' => $oficina
         ];
     }
 
