@@ -5,13 +5,13 @@ import { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import clienteAxios from "../../config/axios";
 import { toast } from "react-toastify";
-
+import { useNavigate } from "react-router-dom";
 
 
 
 
 const ModalCerrar = ({handleClose,open,oficina}) => {
- 
+  const navigate = useNavigate();
     // const {user} = useAuth({middleware:'auth'});
     // const token = localStorage.getItem("AUTH_TOKEN");
 
@@ -38,7 +38,7 @@ const handleCerrar =async()=>{
             },
         })
         toast.success('Cerrado Correctamente', {theme:'colored'})
-    
+        navigate(0);
 
        
        
