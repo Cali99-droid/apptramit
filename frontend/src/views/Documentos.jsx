@@ -236,6 +236,12 @@ export default function Documentos() {
         );
       },
     },
+
+    {
+      field: "code",
+      headerName: "Código",
+      width: 100,
+    },
     {
       field: "tipo",
       headerName: "Tipo",
@@ -461,6 +467,7 @@ export default function Documentos() {
                   asunto: false,
                   folios: false,
                   email: false,
+                  code: false,
                 },
               },
             }}
