@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 // import Swal from 'sweetalert2'
-// import ReCAPTCHA from "react-google-recaptcha";
+import ReCAPTCHA from "react-google-recaptcha";
 import withReactContent from "sweetalert2-react-content";
 import {
   TextField,
@@ -19,7 +19,7 @@ import {
 // import clienteAxios from '../config/axios';
 import axios from "axios";
 import { useState } from "react";
-// import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import ModalMensaje from "./modal/ModalMensaje";
 import { green } from "@mui/material/colors";
 
@@ -67,7 +67,7 @@ const initialValues = {
 const SolicitudRequestForm = () => {
   const api = import.meta.env.VITE_API_URL;
   const [code, setCode] = useState("");
-  // const [captcha, setCaptcha] = useState('');
+  const [captcha, setCaptcha] = useState("");
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(false);
   const handleClose = () => {
@@ -94,12 +94,12 @@ const SolicitudRequestForm = () => {
 
       // Realizar acciones cuando el formulario se envíe con éxito
       try {
-        // if(!captcha){
-        //   toast.warning('Marca la casilla para comprobar que no eres un robot')
-        //   return
-        // }
-        // formData.append('captcha', captcha);
-        // toast.info('Guardando')
+        if (!captcha) {
+          toast.warning("Marca la casilla para comprobar que no eres un robot");
+          return;
+        }
+        formData.append("captcha", captcha);
+        toast.info("Guardando");
         setLoading(true);
         const { data } = await axios.post(`${api}/api/solicitud`, formData, {
           headers: {
@@ -163,10 +163,9 @@ const SolicitudRequestForm = () => {
     },
   });
 
-  // const handleRecaptchaChange = (value) => {
-
-  //  setCaptcha(value);
-  // }
+  const handleRecaptchaChange = (value) => {
+    setCaptcha(value);
+  };
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -215,6 +214,7 @@ const SolicitudRequestForm = () => {
             fullWidth
             variant="outlined"
             name="dni"
+            type="number"
             value={formik.values.dni}
             onChange={formik.handleChange}
             error={formik.touched.dni && Boolean(formik.errors.dni)}
@@ -365,10 +365,10 @@ const SolicitudRequestForm = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          {/* <ReCAPTCHA
-          sitekey="6LcpWf4oAAAAACNgA6kHAO6LV31f9H1EFCHV5gzW"
-          onChange={handleRecaptchaChange}
-        /> */}
+          <ReCAPTCHA
+            sitekey="6LcpWf4oAAAAACNgA6kHAO6LV31f9H1EFCHV5gzW"
+            onChange={handleRecaptchaChange}
+          />
         </Grid>
         <Grid item xs={12}>
           <Button
