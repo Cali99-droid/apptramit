@@ -66,6 +66,8 @@ class DocumentoController extends Controller
             $documento->asunto = $request->input('asunto');
             $documento->estado_id = 1;
             $documento->code = Str::upper(Str::random(6));
+            $documento->companyName = $request->input('companyName');
+            $documento->ruc = $request->input('ruc');
 
             $pdfFile = $request->file('pdfFile');
 

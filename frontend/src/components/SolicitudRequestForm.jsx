@@ -48,6 +48,15 @@ const validationSchema = yup.object().shape({
     .test("fileType", "Solo se permiten archivos PDF", (value) => {
       return value && value.type === "application/pdf";
     }),
+  companyName: yup.string().optional(),
+
+  ruc: yup.string().when("personaType", {
+    is: 2,
+    then: yup
+      .string()
+      .length(11, "El RUC debe ser de 11 dígitos")
+      .required("El número RUC es requerido"),
+  }),
 });
 const initialValues = {
   asunto: "",
@@ -55,13 +64,14 @@ const initialValues = {
   telefono: "",
   email: "",
   personaType: "",
-
   name: "",
   dni: "",
   documentName: "",
   folio: "",
   documentType: "",
   pdfFile: null,
+  companyName: "",
+  ruc: "",
 };
 
 const SolicitudRequestForm = () => {
@@ -75,6 +85,8 @@ const SolicitudRequestForm = () => {
   };
   const [loading, setLoading] = useState(false);
   // const token = localStorage.getItem("AUTH_TOKEN");
+  const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -90,14 +102,20 @@ const SolicitudRequestForm = () => {
       formData.append("documentName", values.documentName);
       formData.append("folio", values.folio);
       formData.append("documentType", values.documentType);
+      formData.append("companyName", values.companyName);
+      formData.append("ruc", values.ruc);
       formData.append("pdfFile", values.pdfFile);
-
       // Realizar acciones cuando el formulario se envíe con éxito
       try {
+        if (values.personaType === 2 && values.ruc.length <= 0) {
+          toast.warning("Ingrese correctamente el RUC");
+          return;
+        }
         if (!captcha) {
           toast.warning("Marca la casilla para comprobar que no eres un robot");
           return;
         }
+
         formData.append("captcha", captcha);
         toast.info("Guardando");
         setLoading(true);
@@ -114,41 +132,6 @@ const SolicitudRequestForm = () => {
         setOpen(true);
         resetForm();
         setLoading(false);
-        //   MySwal.fire({
-        //     icon:'success',
-        //     title: 'Registro Exitoso!',
-
-        //     html: `
-        //           Estimado <b>${values.name}</b>,
-        //           su solicitud esta en proceso de atención,
-        //           el codigo de seguimiento es: <b>${data.code}</b> y
-        //           puede consultarlo desde  <a href="http://127.0.0.1:5173/consulta">aqui</a>
-        //     `,
-        //     footer: '<a href="#">Sistema de trámite documentario - Municipalidad de Chaccho?</a>',
-        //     showCloseButton: true,
-        //     showCancelButton: true,
-        //     focusConfirm: false,
-        //     confirmButtonText: `
-        //  Aceptar!
-        //     `,
-        //     confirmButtonAriaLabel: "Thumbs up, great!",
-        //     cancelButtonText: `
-        //       Imprimir Cargo
-        //     `,
-        //     cancelButtonAriaLabel: "Cargo"
-
-        //   }).then((result)=>{
-        //     // if (result.isConfirmed) {
-        //     //   handlePrint()
-        //     //   // resetForm();
-        //     //   // window.location.reload(true);
-        //     // } else if (result.isDenied) {
-        //     //   console.log('impr')
-        //     //   handlePrint()
-        //     //   // Swal.fire("Changes are not saved", "", "info");
-        //     // }
-
-        //   })
       } catch (error) {
         MySwal.fire({
           icon: "error",
@@ -158,8 +141,6 @@ const SolicitudRequestForm = () => {
         setLoading(false);
         console.log(error.response.data.message);
       }
-
-      // console.log('Formulario enviado con éxito:', values);
     },
   });
 
@@ -182,7 +163,10 @@ const SolicitudRequestForm = () => {
               labelId="demo-simple-select-label"
               name="personaType"
               value={formik.values.personaType}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.handleChange(e);
+                setShowAdditionalInputs(e.target.value === 2);
+              }}
               error={
                 formik.touched.personaType && Boolean(formik.errors.personaType)
               }
@@ -194,20 +178,42 @@ const SolicitudRequestForm = () => {
             </Select>
           </FormControl>
         </Grid>
-        {/* <Grid item xs={12} sm={6}>
+        {showAdditionalInputs && (
+          <>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Razón Social"
+                fullWidth
+                variant="outlined"
+                name="companyName"
+                value={formik.values.companyName}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.companyName &&
+                  Boolean(formik.errors.companyName)
+                }
+                helperText={
+                  formik.touched.companyName && formik.errors.companyName
+                }
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Número RUC"
+                fullWidth
+                variant="outlined"
+                name="ruc"
+                type="number"
+                value={formik.values.ruc}
+                onChange={formik.handleChange}
+                error={formik.touched.ruc && Boolean(formik.errors.ruc)}
+                helperText={formik.touched.ruc && formik.errors.ruc}
+                required
+              />
+            </Grid>
+          </>
+        )}
 
-          <TextField
-            label="Oficina que recepciona"
-            fullWidth
-            variant="outlined"
-            name="office"
-            value={formik.values.office}
-            onChange={formik.handleChange}
-            error={formik.touched.office && Boolean(formik.errors.office)}
-            helperText={formik.touched.office && formik.errors.office}
-            required
-          />
-        </Grid> */}
         <Grid item xs={12} sm={6}>
           <TextField
             label="DNI del interesado"

@@ -299,6 +299,24 @@ export default function Documentos() {
       },
     },
     {
+      field: "companyName",
+      headerName: "Razón Social",
+      // description: 'This column has a value getter and is not sortable.',
+      sortable: true,
+      width: 200,
+      //   valueGetter: (params) =>
+      //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    },
+    {
+      field: "ruc",
+      headerName: "RUC",
+      // description: 'This column has a value getter and is not sortable.',
+      sortable: true,
+      width: 200,
+      //   valueGetter: (params) =>
+      //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    },
+    {
       field: "asunto",
       headerName: "Asunto",
       // description: 'This column has a value getter and is not sortable.',
@@ -468,10 +486,12 @@ export default function Documentos() {
                   folios: false,
                   email: false,
                   code: false,
+                  ruc: false,
+                  companyName: false,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10, 25, 50]}
             slots={{ toolbar: GridToolbar }}
 
             // disableRowSelectionOnClick
