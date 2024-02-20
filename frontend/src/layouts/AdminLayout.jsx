@@ -138,23 +138,9 @@ export default function AdminLayout() {
               <MenuIcon />
             </IconButton>
 
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              SISTRA
-            </Typography>
+            <Box>
+              <img src="/img/escudo-removebg.png" width={80} />
+            </Box>
             <Typography>
               {`Bienvenido ${user?.name} - ${oficina?.nombre}`}
             </Typography>
