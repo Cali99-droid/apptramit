@@ -1,25 +1,34 @@
 import { Link } from "react-router-dom";
-import { AppBar,  Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
 
-import AdbIcon from '@mui/icons-material/Adb';
-import LoginIcon from '@mui/icons-material/Login';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import LoginIcon from "@mui/icons-material/Login";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useAuth } from "../hooks/useAuth";
 // const pages = ['consulta', 'solicitud'];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const Header = () => {
-  const {user} = useAuth({middleware:''});
-    const [anchorElNav, setAnchorElNav] = useState(null);
+  const { user } = useAuth({ middleware: "" });
+  const [anchorElNav, setAnchorElNav] = useState(null);
   // const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-//   const handleOpenUserMenu = (event) => {
-//     setAnchorElUser(event.currentTarget);
-//   };
+  //   const handleOpenUserMenu = (event) => {
+  //     setAnchorElUser(event.currentTarget);
+  //   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -33,38 +42,73 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
+          <Box
             sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              display: { xs: "none", md: "flex" },
             }}
+            alignItems={"center"}
+            flexGrow={1}
           >
-            SISTRA
-          </Typography>
-         <Box display={'flex'} gap={2}sx={ {display: { xs: 'none', md: 'flex' }}}>
-         <Link to={'/consulta'} >
-                <Button variant='text'  color="inherit"  >
-                    Consulta
-                </Button>
-                </Link>
-                <Link to={'/solicitud'}>
-                <Button variant='text'  color="inherit"  >
-                    Solicitud de trámite
-                    
-                </Button>
-                </Link>
-         </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box>
+              <img src="/img/escudo-removebg.png" width={80} />
+            </Box>
+
+            {/* <AdbIcon  */}
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              marginRight={10}
+              alignItems={"center"}
+            >
+              <Typography
+                variant="h9"
+                noWrap
+                component="a"
+                href="/"
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "fantasy  ",
+                  // fontWeight: 700,
+
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                Municipalidad Distrital de Chaccho
+              </Typography>
+              <Typography
+                fontSize={18}
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "Satisfy",
+                  // fontWeight: 700,
+
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                Servicio, compromiso y comunidad.
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box
+            display={"flex"}
+            gap={5}
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
+            <Link to={"/consulta"}>
+              <Button variant="text" color="inherit" sx={{ fontWeight: 900 }}>
+                Consulta
+              </Button>
+            </Link>
+            <Link to={"/solicitud"}>
+              <Button variant="text" color="inherit" sx={{ fontWeight: 900 }}>
+                Solicitud de trámite
+              </Button>
+            </Link>
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -79,92 +123,71 @@ const Header = () => {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
-            
-                <MenuItem  onClick={handleCloseNavMenu} >
-                <Link to={'/consulta'} >
-                <Button variant='text'  color="inherit"  >
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Link to={"/consulta"}>
+                  <Button variant="text" color="inherit">
                     Consulta
-                </Button>
+                  </Button>
                 </Link>
-               
-                </MenuItem>
-                <MenuItem>
-                <Link to={'/solicitud'}>
-                <Button variant='text'  color="inherit"  >
+              </MenuItem>
+              <MenuItem>
+                <Link to={"/solicitud"}>
+                  <Button variant="text" color="inherit">
                     Solicitud de trámite
-                    
-                </Button>
+                  </Button>
                 </Link>
-                </MenuItem>
-            
+              </MenuItem>
             </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            SISTRA
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          {/*   {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}*/}
-          </Box> 
 
-          <Box sx={{ flexGrow: 0 }}>
-            
-              {/* <Tooltip title="Open settings"><IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Box marginLeft={10}>
+              <Link href="/">
+                <img src="/img/escudo-removebg.png" width={80} />
+              </Link>
+            </Box>
+          </Box>
+
+          <Box sx={{ flexGrow: 0 }} ml={6}>
+            {/* <Tooltip title="Open settings"><IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton> </Tooltip>*/}
-               
-            {user?(
-            <Link to={'/auth/login'}>
-            <Button variant='text' color="inherit" endIcon={<DashboardIcon/>}>Oficina </Button>
-            </Link>
-            
-            ):(
-                    <Link to={'/auth/login'}>
-                  
-                <Button variant='text' color="inherit" endIcon={<LoginIcon/>} >
-                    Acceder
-                   
+
+            {user ? (
+              <Link to={"/auth/login"}>
+                <Button
+                  variant="text"
+                  color="inherit"
+                  endIcon={<DashboardIcon />}
+                >
+                  Oficina{" "}
                 </Button>
-                </Link>
-                  )}
-                
+              </Link>
+            ) : (
+              <Link to={"/auth/login"}>
+                <Button
+                  variant="text"
+                  color="inherit"
+                  endIcon={<LoginIcon />}
+                  sx={{ fontWeight: 700 }}
+                >
+                  Acceder
+                </Button>
+              </Link>
+            )}
+
             {/* <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"

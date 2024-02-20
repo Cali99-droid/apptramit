@@ -12,6 +12,9 @@ const theme = createTheme({
       main: "#007CE1", // Color terciario
     },
   },
+  // typography: {
+  //   fontFamily: ["sans-serif", "Satisfy"].join(","),
+  // },
 });
 
 export default theme;
